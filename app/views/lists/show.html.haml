@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @list.name
+%p
+  %b User:
+  = @list.user_id
+%p
+  %b Permissions:
+  = @list.permissions
+
+= link_to 'Edit', edit_list_path(@list)
+\|
+= link_to 'Back', lists_path
