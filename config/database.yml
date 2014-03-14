@@ -3,7 +3,7 @@ development:
   encoding: unicode
   database: todo_development
   pool: 5
-  username: yourusername
+  username: 
   password:
 
 test:
@@ -11,7 +11,7 @@ test:
   encoding: unicode
   database: todo_test
   pool: 5
-  username: yourusername
+  username: 
   password:
 
 production:
@@ -19,5 +19,5 @@ production:
   encoding: unicode
   database: todo_production
   pool: 5
-  username: yourusername
+  username: 
   password:

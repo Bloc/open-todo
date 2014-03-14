@@ -1,5 +1,6 @@
 class Item < ActiveRecord::Base
   belongs_to :list
+  delegate :user, to: :list
 
   scope :completed, -> { where(completed: false) }
 

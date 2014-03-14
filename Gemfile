@@ -5,27 +5,27 @@ gem 'rails', '4.0.3'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
-
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap'
-gem 'rspec'
+gem 'bootstrap-sass'
 gem 'haml'
 gem 'haml-rails'
-gem 'rspec-rails'
-gem 'factory_girl_rails'
 gem 'coffee-rails', '~> 4.0.0'
-gem 'bootstrap-sass'
+gem 'jquery-rails'
+
+group :development, :test do
+  gem 'pry'
+  gem 'binding_of_caller'
+end
+
+group :test do
+  gem 'factory_girl_rails'
+  gem 'rspec-rails'  
+  gem 'rspec'
+end
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
