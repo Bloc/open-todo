@@ -2,6 +2,10 @@ class List < ActiveRecord::Base
   belongs_to :user
   has_many :items
 
+  def self.permission_options
+    %w(private viewable open)
+  end
+
   def add(item_description)
     if items.create(description: item_description)
       true

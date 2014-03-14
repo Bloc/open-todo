@@ -2,6 +2,6 @@
 
 = render 'form'
 
-= link_to 'Show', @list
+= link_to 'Show', user_list_path(@user, @list), class: 'btn'
 \|
-= link_to 'Back', lists_path
+= link_to 'Back', @user, class: 'btn'

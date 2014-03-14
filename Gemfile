@@ -14,6 +14,7 @@ gem 'haml-rails'
 gem 'rspec-rails'
 gem 'factory_girl_rails'
 gem 'coffee-rails', '~> 4.0.0'
+gem 'bootstrap-sass'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

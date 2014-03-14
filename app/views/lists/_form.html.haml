@@ -1,4 +1,4 @@
-= form_for @list do |f|
+= form_for [@user, @list] do |f|
   - if @list.errors.any?
     #error_explanation
       %h2= "#{pluralize(@list.errors.count, "error")} prohibited this list from being saved:"
@@ -10,10 +10,7 @@
     = f.label :name
     = f.text_field :name
   .field
-    = f.label :user_id
-    = f.number_field :user_id
-  .field
     = f.label :permissions
-    = f.text_field :permissions
+    = f.select :permissions, options_for_select(List.permission_options)
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', class: 'btn btn-primary'

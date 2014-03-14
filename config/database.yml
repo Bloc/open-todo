@@ -1,0 +1,23 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: todo_development
+  pool: 5
+  username: yourusername
+  password:
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: todo_test
+  pool: 5
+  username: yourusername
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: todo_production
+  pool: 5
+  username: yourusername
+  password:

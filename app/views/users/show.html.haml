@@ -4,6 +4,20 @@
   %b Username:
   = @user.username
 
-= link_to 'Edit', edit_user_path(@user)
+%h1 Lists
+%table.table
+  %tr
+    %th List Name
+
+  - @lists.each do |list|
+    %tr
+      %td= link_to list.name, user_list_path(@user, list), class: 'btn'
+
+= link_to 'Add New List', new_user_list_path(@user), class: 'btn'
+
+%br
+%br
+
+= link_to 'Edit', edit_user_path(@user), class: 'btn'
 \|
-= link_to 'Back', users_path
+= link_to 'Back', users_path, class: 'btn'

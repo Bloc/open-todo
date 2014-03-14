@@ -1,15 +1,29 @@
 %p#notice= notice
 
+%h1 User Info
 %p
   %b Name:
   = @list.name
 %p
   %b User:
-  = @list.user_id
+  = @user.username
 %p
   %b Permissions:
   = @list.permissions
 
-= link_to 'Edit', edit_list_path(@list)
+%h1 Items
+%table.table
+  %tr
+    %th Description
+    %th Mark Complete
+  - @items.each do |item|
+    %tr
+      %td= item.description
+      %td= link_to 'Mark Complete', item, method: :delete, class: 'btn'
+%br
+= link_to 'Add new item', new_list_item_path(@list), class: 'btn'
+%br
+%br
+= link_to 'Edit', edit_user_list_path(@user, @list), class: 'btn'
 \|
-= link_to 'Back', lists_path
+= link_to 'Back', @user, class: 'btn'
