@@ -17,12 +17,12 @@ describe Api::UsersController do
       JSON.parse(response.body).should == params['new_user']
     end
 
-    it "returns an error when not given a username" do
+    it "returns an error when not given a password" do
       post :create, { username: 'testuser' }
       response.should be_error
     end
 
-    it "returns an error when not given a password" do
+    it "returns an error when not given a username" do
       post :create, { password: 'testpass' }
       response.should be_error
     end
