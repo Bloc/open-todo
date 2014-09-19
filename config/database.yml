@@ -4,7 +4,7 @@ development:
   database: todo_development
   pool: 5
   username: 
-  password:
+  password: 
 
 test:
   adapter: postgresql
