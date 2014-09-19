@@ -1,7 +1,11 @@
-
 class Api::UsersController < ApplicationController
+  before_filter :set_response
+  respond_to :json
   def index
     @users = User.all
+    respond_with @users.each do |user|
+      as_json(user)
+    end
   end
 
   def create
@@ -16,6 +20,10 @@ class Api::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:username, :password)
+      params.require(:user).permit(:username, :password)
+  end
+
+  def set_response
+    request.format = :json
   end
 end
