@@ -3,9 +3,7 @@ class Api::UsersController < ApplicationController
   respond_to :json
   def index
     @users = User.all
-    respond_with @users.each do |user|
-      as_json(user)
-    end
+    respond_with @users.as_json(only: [:id, :username], root: true)
   end
 
   def create

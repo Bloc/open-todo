@@ -17,10 +17,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def as_json(options={})
-    super(only: [:id, :username])
-  end
-
   private
 
   def owns?(list)
