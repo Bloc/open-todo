@@ -14,3 +14,9 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+*.sublime-project
+*.sublime-workspace
+
+# Ignore application configuration
+/config/database.yml
+/config/application.yml

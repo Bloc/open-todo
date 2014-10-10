@@ -12,8 +12,11 @@ gem 'haml'
 gem 'haml-rails'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
+gem 'active_model_serializers'
+gem 'figaro'
 
 group :development, :test do
+  gem 'rest-client'
   gem 'pry'
   gem 'binding_of_caller'
 end
