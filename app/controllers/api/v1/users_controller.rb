@@ -11,8 +11,14 @@ module Api
       end
 
       def create
+        respond_with User.create(params[:username, :password])
+
+        if get_resource.save
+          render :show, status: :created
+        else
+          render json: get_resource.errors, status: :unprocessable_entity
+        end
       end
-      
     end
   end
 end
