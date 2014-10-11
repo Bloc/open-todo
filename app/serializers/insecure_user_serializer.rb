@@ -1,7 +1,7 @@
 class InsecureUserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :password, :full_name
+  attributes :id, :username
 
-  def full_name
-    object.full_name
+  def username
+    object.username
   end
 end
