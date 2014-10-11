@@ -11,14 +11,21 @@ module Api
       end
 
       def create
-        respond_with User.create(params[:username, :password])
+        @resource = User.new(user_params)
 
-        if get_resource.save
-          render :show, status: :created
+        if @resource.save
+          render :show, status: :success
         else
-          render json: get_resource.errors, status: :unprocessable_entity
+          render json: @resource.errors, status: :errors
         end
       end
+
+      private
+
+      def user_params
+        params.permit(:username, :password)
+      end
+
     end
   end
 end
