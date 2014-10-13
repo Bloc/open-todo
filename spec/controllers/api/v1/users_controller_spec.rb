@@ -13,7 +13,8 @@ describe Api::V1::UsersController do
       expect{ post :create, params }
         .to change{ User.where(params['user']).count }
         .by 1
-      response.body.should include('testuser')
+      
+      expect(JSON.parse(response.body)).should eq(params['user'])
     end
 
     it "returns an error when not given a password" do
