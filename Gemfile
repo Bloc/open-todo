@@ -18,6 +18,7 @@ gem 'figaro'
 group :development, :test do
   gem 'rest-client'
   gem 'pry'
+  gem 'pry-rails'
   gem 'binding_of_caller'
 end
 
@@ -26,6 +27,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'  
   gem 'rspec'
+  gem 'shoulda-matchers', require: false
 end
 
 # Use Uglifier as compressor for JavaScript assets

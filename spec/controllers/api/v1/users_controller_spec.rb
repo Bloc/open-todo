@@ -8,22 +8,21 @@ describe Api::V1::UsersController do
 
   describe "create" do
     it "creates and returns a new user from username and password params" do
-      params = { 'new_user' => { 'username' => 'testuser', 'password' => 'testpass' } }
+      params = { 'user' => { 'username' => 'testuser', 'password' => 'testpass' }}
 
       expect{ post :create, params }
-        .to change{ User.where(params['new_user']).count }
+        .to change{ User.where(params['user']).count }
         .by 1
-
-      JSON.parse(response.body).should == params['new_user']
+      response.body.should include('testuser')
     end
 
     it "returns an error when not given a password" do
-      post :create, { username: 'testuser' }
+      post :create, {user: { username: 'testuser' }}
       response.should be_error
     end
 
     it "returns an error when not given a username" do
-      post :create, { password: 'testpass' }
+      post :create, {user: { password: 'testpass' }}
       response.should be_error
     end
   end
