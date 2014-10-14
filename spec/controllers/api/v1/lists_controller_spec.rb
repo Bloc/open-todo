@@ -13,54 +13,57 @@ describe Api::V1::ListsController do
     end
 
     context "with correct user's password" do
-      xit "returns all lists associated with the user"
-      params = {'user' => '1', 'password' => 'testpass'}
-      get :index, params
+      it "returns all lists associated with the user" do
+        params = {'user' => '1', 'password' => 'testpass'}
+        get :index, params
 
-      expect(response).to be_success
-      expect(json).to eq(
-        { 'lists' => 
-          [
-            { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
-            { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' },
-            { 'id' => 3, 'name' => 'privatelist', 'user' => '1', 'permissions' => 'private' }
-          ]
-        }
-      )
+        expect(response).to be_success
+        expect(json).to eq(
+          { 'lists' => 
+            [
+              { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
+              { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' },
+              { 'id' => 3, 'name' => 'privatelist', 'user' => '1', 'permissions' => 'private' }
+            ]
+          }
+        )
+      end
     end
 
     context "without correct user's password" do
-      xit "returns all visible and open lists"
+      it "returns all visible and open lists" do
 
-      params = {'user' => '1'}
-      get :index, params
+        params = {'user' => '1'}
+        get :index, params
 
-      expect(response).to be_success
-      expect(json).to eq(
-        { 'lists' => 
-          [
-            { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
-            { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' }
-          ]
-        }
-      )
+        expect(response).to be_success
+        expect(json).to eq(
+          { 'lists' => 
+            [
+              { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
+              { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' }
+            ]
+          }
+        )
+      end
     end
 
     context "for all users" do
-      xit "returns all visible and open lists"
+      it "returns all visible and open lists" do
 
-      get :index
+        get :index
 
-      expect(response).to be_success
-      expect(json).to eq(
-        { 'lists' => 
-          [
-            { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
-            { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' },
-            { 'id' => 4, 'name' => 'openlist', 'user' => '2', 'permissions' => 'open' }
-          ]
-        }
-      )
+        expect(response).to be_success
+        expect(json).to eq(
+          { 'lists' => 
+            [
+              { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
+              { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' },
+              { 'id' => 4, 'name' => 'openlist', 'user' => '2', 'permissions' => 'open' }
+            ]
+          }
+        )
+      end
     end
   end
 
@@ -70,50 +73,55 @@ describe Api::V1::ListsController do
     end
 
     context "with correct user's password" do
-      xit "takes a list name, creates it if it doesn't exist, and returns false if it does"
+      xit "takes a list name, creates it if it doesn't exist, and returns false if it does" do
 
-      params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'testpass' }}
-      post :create, params
+        params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'testpass' }}
+        post :create, params
 
-      expect(response).to be_success
-      expect(json).to eq(params['list'])
-      expect(List.last.name).to eq('testlist')
+        expect(response).to be_success
+        expect(json).to eq(params['list'])
+        expect(List.last.name).to eq('testlist')
 
-      post :create, params
-      expect(response).to be_error
-      expect(List.all.count).to eq 1      
+        post :create, params
+        expect(response).to be_error
+        expect(List.all.count).to eq 1      
+      end
     end
 
     context "without correct user's password" do
-      xit "it errors"
-      params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
-      post :create, params
+      xit "it errors" do
+        params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
+        post :create, params
 
-      expect(response).to be_error
+        expect(response).to be_error
+      end
     end
 
     context "with blank password" do
-      xit "it errors"
-      params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open' }}
-      post :create, params
+      xit "it errors" do
+        params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open' }}
+        post :create, params
 
-      expect(response).to be_error
+        expect(response).to be_error
+      end
     end
 
     context "without valid permission" do
-      xit "it errors"
-      params = { 'list' => { 'name' => 'testlist', 'permissions' => 'wrongperm', 'password' => 'testpass' }}
-      post :create, params
+      xit "it errors" do
+        params = { 'list' => { 'name' => 'testlist', 'permissions' => 'wrongperm', 'password' => 'testpass' }}
+        post :create, params
 
-      expect(response).to be_error
+        expect(response).to be_error
+      end
     end
 
     context "with blank permission" do
-      xit "it errors"
-      params = { 'list' => { 'name' => 'testlist', 'password' => 'testpass' }}
-      post :create, params
+      xit "it errors" do
+        params = { 'list' => { 'name' => 'testlist', 'password' => 'testpass' }}
+        post :create, params
 
-      expect(response).to be_error
+        expect(response).to be_error
+      end
     end
   end
 
@@ -124,21 +132,23 @@ describe Api::V1::ListsController do
     end
 
     context "with correct user's password" do
-      xit "updates a list name"
+      xit "updates a list name" do
 
-      params = { 'list' => { 'id' => '1', name => 'newlistname', 'password' => 'testpass' }}
-      put :update, params
+        params = { 'list' => { 'id' => '1', name => 'newlistname', 'password' => 'testpass' }}
+        put :update, params
 
-      expect(response).to be_success
-      expect(List.last.name).to eq('newlistname')
+        expect(response).to be_success
+        expect(List.last.name).to eq('newlistname')
+      end
     end
 
     context "without correct user's password" do
-      xit "it errors"
-      params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
-      put :update, params
+      xit "it errors" do
+        params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
+        put :update, params
 
-      expect(response).to be_error
+        expect(response).to be_error
+      end
     end
   end
 
@@ -168,5 +178,4 @@ describe Api::V1::ListsController do
       expect(assigns(:list)).to be_nil
     end
   end
-
 end
