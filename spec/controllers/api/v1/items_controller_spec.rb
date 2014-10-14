@@ -7,9 +7,9 @@ describe Api::V1::ItemsController do
       user = create(:user, password: 'testpass')
       list = create(:list, user: user)
       list2 = create(:list, permission: 'private')
-      item = create(:item, description: 'item1', list: list)
-      item2 = create(:item, description: 'item2', list: list)
-      item3 = create(:item, description: 'item3', list: list2)
+      item = create(:item, description: 'item1', list_id: list.id)
+      item2 = create(:item, description: 'item2', list_id: list.id)
+      item3 = create(:item, description: 'item3', list_id: list2.id)
     
     end
 
@@ -112,9 +112,9 @@ describe Api::V1::ItemsController do
   describe "#update" do
     before do
       user = create(:user, password: 'testpass')
-      list = create(:list, user: @user)
+      list = create(:list, user: user)
       list2 = create(:list, permission: 'private')
-      item = create(:item, list: @list)
+      item = create(:item, list_id: list.id)
     end
 
     context "with permission for the list" do
