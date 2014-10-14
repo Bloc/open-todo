@@ -130,7 +130,7 @@ describe Api::V1::ListsController do
       put :update, params
 
       expect(response).to be_success
-      expect(@list.name).to eq('newlistname')
+      expect(List.last.name).to eq('newlistname')
     end
 
     context "without correct user's password" do
