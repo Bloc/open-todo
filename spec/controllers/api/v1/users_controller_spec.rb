@@ -12,17 +12,19 @@ describe Api::V1::UsersController do
       post :create, params
 
       expect(response).to be_success
-      expect(JSON.parse(response.body)).to eq(params['user'])
-      expect(User.size).to eq(1)
+      expect(json).to eq(params['user'])
+      expect(User.last.username).to eq('testuser')
     end
 
     it "returns an error when not given a password" do
-      post :create, {user: { username: 'testuser' }}
+      post :create, { user: { username: 'testuser' }}
+
       expect(response).to be_error
     end
 
     it "returns an error when not given a username" do
-      post :create, {user: { password: 'testpass' }}
+      post :create, { user: { password: 'testpass' }}
+      
       expect(response).to be_error
     end
   end
@@ -36,9 +38,8 @@ describe Api::V1::UsersController do
     it "returns all usernames and ids" do
       get :index
 
-      expect(response).to eq(:success)
-
-      expect(JSON.parse(response.body)).to eq( 
+      expect(response).to be_success
+      expect(json).to eq( 
         { 'users' => 
           [
             { 'id' => 1, 'username' => 'name1' },
