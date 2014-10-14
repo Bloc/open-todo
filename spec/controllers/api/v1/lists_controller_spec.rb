@@ -159,7 +159,7 @@ describe Api::V1::ListsController do
     end
 
     it "deletes a list" do
-      list = create(:list, user: @user)
+      list = create(:list)
       delete :destroy, id: list.id
 
       expect( response ).to be_success
