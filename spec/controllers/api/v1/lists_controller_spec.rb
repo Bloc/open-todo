@@ -136,7 +136,7 @@ describe Api::V1::ListsController do
     context "without correct user's password" do
       xit "it errors"
       params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
-      post :create, params
+      put :update, params
 
       expect(response).to be_error
     end
