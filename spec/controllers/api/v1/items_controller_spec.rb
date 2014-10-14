@@ -10,18 +10,17 @@ describe Api::V1::ItemsController do
       item = create(:item, description: 'item1', list_id: list.id)
       item2 = create(:item, description: 'item2', list_id: list.id)
       item3 = create(:item, description: 'item3', list_id: list2.id)
-    
     end
 
     context "with permission for the list" do
-      xit "returns all uncompleted items associated with a list"
+      xit "returns all uncompleted items associated with a list" do
         params = {'list' => '1'}
         get :index, params
 
         expect(response).to be_success
         expect(json).to eq(
           { 'list' => 1
-            { 'item' => [
+            { 'item' [
               { 'id' => 1, 'description' => 'item1', 'completed' => 'false' },
               { 'id' => 2, 'description' => 'item2', 'completed' => 'false' }
               ]
@@ -32,7 +31,7 @@ describe Api::V1::ItemsController do
     end
 
     context "without permission for the list" do
-      xit "returns error"
+      xit "returns error" do
         params = {'list' => '2'}
         get :index, params
 
@@ -54,8 +53,8 @@ describe Api::V1::ItemsController do
     end
 
     context "when owned by self" do
-      xit "an open list takes a description, creates item"
-        params = { 'list' => 1 { 'item' => {'description' => 'testitem' }}}
+      xit "an open list takes a description, creates item" do
+        params = { 'list' => 1 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_success
@@ -63,8 +62,8 @@ describe Api::V1::ItemsController do
         expect(Item.last.description).to eq('testitem')    
       end
 
-      xit "a viewable list takes a description, creates item"
-        params = { 'list' => 2 { 'item' => {'description' => 'testitem' }}}
+      xit "a viewable list takes a description, creates item" do
+        params = { 'list' => 2 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_success
@@ -72,8 +71,8 @@ describe Api::V1::ItemsController do
         expect(Item.last.description).to eq('testitem') 
       end
 
-      xit "a private list takes a description, creates item"
-        params = { 'list' => 3 { 'item' => {'description' => 'testitem' }}}
+      xit "a private list takes a description, creates item" do
+        params = { 'list' => 3 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_success
@@ -83,25 +82,24 @@ describe Api::V1::ItemsController do
     end
 
     context "when owned by someone else" do
-      xit "an open list takes a description, creates item"
-        params = { 'list' => 4 { 'item' => {'description' => 'testitem' }}}
+      xit "an open list takes a description, creates item" do
+        params = { 'list' => 4 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_success
         expect(json).to eq(params['item'])
         expect(Item.last.description).to eq('testitem')    
       end
-
     
-      xit "a viewable list returns an error"
-        params = { 'list' => 5 { 'item' => {'description' => 'testitem' }}}
+      xit "a viewable list returns an error" do
+        params = { 'list' => 5 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_error
       end
 
-      xit "a private list returns an error"
-        params = { 'list' => 6 { 'item' => {'description' => 'testitem' }}}
+      xit "a private list returns an error" do
+        params = { 'list' => 6 { 'item' {'description' => 'testitem' }}}
         post :create, params
 
         expect(response).to be_error
@@ -118,16 +116,16 @@ describe Api::V1::ItemsController do
     end
 
     context "with permission for the list" do
-      xit "updates a item description"
-        params = { 'list' => '1' { 'task' => {'id' => '1', description => 'newitemname'}} }
+      xit "updates a item description" do
+        params = { 'list' => '1' { 'items' {'id' => '1', description => 'newitemname'}} }
         put :update, params
 
         expect(response).to be_success
         expect(Item.last.name).to eq('newitemname')
       end
 
-      xit "updates a item to be complete"
-        params = { 'list' => '1' { 'task' => {'id' => '1', completed => 'true'}} }
+      xit "updates a item to be complete" do
+        params = { 'list' => '1' { 'items' {'id' => '1', completed => 'true'}]} }
         put :update, params
 
         expect(response).to be_success
@@ -136,15 +134,15 @@ describe Api::V1::ItemsController do
     end
 
     context "without permission for the list" do
-      xit "updating a description errors"
-        params = { 'list' => '2' { 'task' => {'id' => '1', description => 'newitemname'}} }
+      xit "updating a description returns an error" do
+        params = { 'list' => '2' { 'items' {'id' => '1', description => 'newitemname'}} }
         put :update, params
 
         expect(response).to be_error
       end
 
-      xit "updating a completion errors"
-        params = { 'list' => '2' { 'task' => {'id' => '1', completed => 'true'}} }
+      xit "updating a completion returns an error" do
+        params = { 'list' => '2' { 'items' {'id' => '1', completed => 'true'}} }
         put :update, params
 
         expect(response).to be_error
