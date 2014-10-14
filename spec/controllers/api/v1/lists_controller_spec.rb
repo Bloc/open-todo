@@ -73,7 +73,7 @@ describe Api::V1::ListsController do
     end
 
     context "with correct user's password" do
-      xit "takes a list name, creates it if it doesn't exist, and returns false if it does" do
+      it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
 
         params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'testpass' }}
         post :create, params
@@ -89,7 +89,7 @@ describe Api::V1::ListsController do
     end
 
     context "without correct user's password" do
-      xit "it errors" do
+      it "it errors" do
         params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
         post :create, params
 
@@ -98,7 +98,7 @@ describe Api::V1::ListsController do
     end
 
     context "with blank password" do
-      xit "it errors" do
+      it "it errors" do
         params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open' }}
         post :create, params
 
@@ -107,7 +107,7 @@ describe Api::V1::ListsController do
     end
 
     context "without valid permission" do
-      xit "it errors" do
+      it "it errors" do
         params = { 'list' => { 'name' => 'testlist', 'permissions' => 'wrongperm', 'password' => 'testpass' }}
         post :create, params
 
@@ -116,7 +116,7 @@ describe Api::V1::ListsController do
     end
 
     context "with blank permission" do
-      xit "it errors" do
+      it "it errors" do
         params = { 'list' => { 'name' => 'testlist', 'password' => 'testpass' }}
         post :create, params
 
@@ -132,7 +132,7 @@ describe Api::V1::ListsController do
     end
 
     context "with correct user's password" do
-      xit "updates a list name" do
+      it "updates a list name" do
 
         params = { 'list' => { 'id' => '1', name => 'newlistname', 'password' => 'testpass' }}
         put :update, params
@@ -143,7 +143,7 @@ describe Api::V1::ListsController do
     end
 
     context "without correct user's password" do
-      xit "it errors" do
+      it "it errors" do
         params = { 'list' => { 'name' => 'testlist', 'permissions' => 'open', 'password' => 'wrongpass' }}
         put :update, params
 
@@ -158,7 +158,7 @@ describe Api::V1::ListsController do
       @user = create(:user, password: 'testpass')
     end
 
-    xit "deletes a list" do
+    it "deletes a list" do
       list = create(:list, user: @user)
       delete :destroy, id: list.id
 
@@ -166,7 +166,7 @@ describe Api::V1::ListsController do
       expect( List.count ).to eq(0)
     end
 
-    xit "fails to delete another user's list" do
+    it "fails to delete another user's list" do
       other_user = create(:user)
       list = create(:list, user: other_user)
 

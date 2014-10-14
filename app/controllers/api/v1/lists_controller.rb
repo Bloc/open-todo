@@ -11,12 +11,20 @@ module Api
       end
 
       def create
-        list = List.new(list_params)
+        @list = List.new(list_params)
 
         if list.save
-          render json: list, status: :success
+          render json: @list, status: :success
         else
-          render json: list.errors, status: :unprocessable_entity
+          render json: @list.errors, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        if @list.destroy
+          render status: :success
+        else
+          render status: :success
         end
       end
 
