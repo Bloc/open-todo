@@ -56,7 +56,8 @@ describe Api::V1::ListsController do
         { 'lists' => 
           [
             { 'id' => 1, 'name' => 'openlist', 'user' => '1', 'permissions' => 'open' },
-            { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' }
+            { 'id' => 2, 'name' => 'viewablelist', 'user' => '1', 'permissions' => 'viewable' },
+            { 'id' => 4, 'name' => 'openlist', 'user' => '2', 'permissions' => 'open' }
           ]
         }
       )
