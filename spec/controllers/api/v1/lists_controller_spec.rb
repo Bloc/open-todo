@@ -153,7 +153,6 @@ describe Api::V1::ListsController do
   end
 
   describe '#destroy' do
-
     before do
       @user = create(:user, password: 'testpass')
     end
