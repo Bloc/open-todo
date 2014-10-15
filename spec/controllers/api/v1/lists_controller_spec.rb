@@ -72,7 +72,7 @@ describe Api::V1::ListsController do
       @user = create(:user, password: 'testpass')
     end
 
-    context "with correct user's password", focus: true do
+    context "with correct user's password" do
       it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
 
         params = { user_id: @user.id, list: {name: 'test_list', permissions: 'open', password: @user.password}}
@@ -84,7 +84,7 @@ describe Api::V1::ListsController do
         expect(last_list.name).to eq('test_list')
 
         post :create, params
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
         expect(List.all.count).to eq 1      
       end
     end
@@ -94,7 +94,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open', password: 'wrongpass' }}
         post :create, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(422) 
       end
     end
 
@@ -103,7 +103,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open' }}
         post :create, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(422) 
       end
     end
 
@@ -112,7 +112,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: { name: 'test_list', permissions: 'wrongperm', password: @user.password }}
         post :create, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(422) 
       end
     end
 
@@ -121,7 +121,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: { name: 'test_list', password: @user.password }}
         post :create, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(422) 
       end
     end
   end
@@ -158,9 +158,9 @@ describe Api::V1::ListsController do
       @user = create(:user, password: 'testpass')
     end
 
-    it "deletes a list" do
+    it "deletes a list", focus: true do
       list = create(:list)
-      params = {user_id: @user.id, id: list.id}
+      params = {user_id: @user.id, list: {id: list.id, password: @user.password}}
       delete :destroy, params
 
       expect(response.status).to eq(200) 
