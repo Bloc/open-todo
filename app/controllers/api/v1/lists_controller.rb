@@ -1,6 +1,8 @@
 module Api
   module V1
     class ListsController < ApiController
+      before_action :set_user
+      before_action :set_list, only: [:show, :edit, :update, :destroy]
 
       def index
         render json: @user.lists
@@ -12,6 +14,7 @@ module Api
 
       def create
         @list = List.new(list_params)
+        @list.user_id = @user.id
 
         if list.save
           render json: @list, status: :success
@@ -24,11 +27,19 @@ module Api
         if @list.destroy
           render status: :success
         else
-          render status: :success
+          render status: :errors
         end
       end
 
       private
+
+      def set_user
+        @user = User.find(params[:user_id])
+      end
+
+      def set_list
+        @list = List.find(params[:id])
+      end
 
       def list_params
         params.require(:list).permit(:name, :permissions)
