@@ -8,7 +8,7 @@ describe Api::V1::UsersController do
 
   describe "#create" do
     it "returns a new user from username and password params" do
-      params = { user: { username: 'testuser', password: 'testpass' }}
+      params = { user: {username: 'testuser', password: 'testpass' }}
       post :create, params
 
       expect(response).to be_success
