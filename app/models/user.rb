@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :api_keys, dependent: :destroy
+  has_one :api_keys, dependent: :destroy
   has_many :lists
   has_many :items, through: :lists
 

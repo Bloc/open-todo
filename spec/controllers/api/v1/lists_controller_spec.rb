@@ -17,7 +17,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: { password: 'testpass'}}
         get :index, params
 
-        expect(response).to be_success
+        expect(response.status).to eq(200) 
         expect(json).to eq(
           { 'lists' => 
             [
@@ -36,7 +36,7 @@ describe Api::V1::ListsController do
         params = { user_id: @user.id, list: {}}
         get :index, params
 
-        expect(response).to be_success
+        expect(response.status).to eq(200) 
         expect(json).to eq(
           { 'lists' => 
             [
@@ -49,11 +49,11 @@ describe Api::V1::ListsController do
     end
 
     context "for all users" do
-      it "returns all visible and open lists" do
+      xit "returns all visible and open lists" do
 
         get :index
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
         expect(json).to eq(
           { 'lists' => 
             [
@@ -75,52 +75,53 @@ describe Api::V1::ListsController do
     context "with correct user's password", focus: true do
       it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
 
-        params = { user_id: @user.id, lists: { name: 'test_list', permissions: 'open', password: @user.password }}
+        params = { user_id: @user.id, list: {name: 'test_list', permissions: 'open', password: @user.password}}
         post :create, params
+        last_list = List.last
 
-        expect(response).to be_success
-        expect(json).to eq(params['list'])
-        expect(List.last.name).to eq('test_list')
+        expect(response.status).to eq(200) 
+        expect(json).to eq({"list"=>{"id"=>last_list.id, "name"=>last_list.name, "user_id"=>last_list.user_id, "permissions"=>last_list.permissions}})
+        expect(last_list.name).to eq('test_list')
 
         post :create, params
-        expect(response).to be_error
+        expect(response.status).to eq(400)
         expect(List.all.count).to eq 1      
       end
     end
 
     context "without correct user's password" do
       it "it errors" do
-        params = { user_id: @user.id, lists: { name: 'test_list', permissions: 'open', password: 'wrongpass' }}
+        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open', password: 'wrongpass' }}
         post :create, params
 
-        expect(response).to be_error
+        expect(response.status).to eq(400) 
       end
     end
 
     context "with blank password" do
       it "it errors" do
-        params = { user_id: @user.id, lists: { name: 'test_list', permissions: 'open' }}
+        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open' }}
         post :create, params
 
-        expect(response).to be_error
+        expect(response.status).to eq(400) 
       end
     end
 
     context "without valid permission" do
       it "it errors" do
-        params = { user_id: @user.id, lists: { name: 'test_list', permissions: 'wrongperm', password: @user.password }}
+        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'wrongperm', password: @user.password }}
         post :create, params
 
-        expect(response).to be_error
+        expect(response.status).to eq(400) 
       end
     end
 
     context "with blank permission" do
       it "it errors" do
-        params = { user_id: @user.id, lists: { name: 'test_list', password: @user.password }}
+        params = { user_id: @user.id, list: { name: 'test_list', password: @user.password }}
         post :create, params
 
-        expect(response).to be_error
+        expect(response.status).to eq(400) 
       end
     end
   end
@@ -134,20 +135,20 @@ describe Api::V1::ListsController do
     context "with correct user's password" do
       it "updates a list name" do
 
-        params = { user_id: @user.id, list: { id: @list.id, name: 'new_list_name', password: @user.password }}
-        put :update, params
+        params = { user_id: @user.id, list_id: @list.id, list: {name: 'new_list_name', password: @user.password }}
+        patch :update, params
 
-        expect(response).to be_success
+        expect(response.status).to eq(200) 
         expect(List.last.name).to eq('new_list_name')
       end
     end
 
     context "without correct user's password" do
       it "it errors" do
-        params = { user_id: @user.id, list: { name: @list.name, permissions: @list.permissions, password: 'wrongpass' }}
-        put :update, params
+        params = { user_id: @user.id, list_id: @list.id, list: { name: @list.name, permissions: @list.permissions, password: 'wrongpass' }}
+        patch :update, params
 
-        expect(response).to be_error
+        expect(response.status).to eq(400) 
       end
     end
   end
@@ -159,10 +160,10 @@ describe Api::V1::ListsController do
 
     it "deletes a list" do
       list = create(:list)
-      params = {user_id: @user.id, id: list.id, password: @user.password}
+      params = {user_id: @user.id, id: list.id}
       delete :destroy, params
 
-      expect( response ).to be_success
+      expect(response.status).to eq(200) 
       expect( List.count ).to eq(0)
     end
 

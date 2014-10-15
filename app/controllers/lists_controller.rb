@@ -38,6 +38,7 @@ class ListsController < ApplicationController
 
   def destroy
     @list.destroy
+    puts @list
     redirect_to @user
   end
 

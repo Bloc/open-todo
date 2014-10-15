@@ -9,23 +9,28 @@ module Api
       end
 
       def show
-        render json: @list.items
+        render json: @list.items.completed
       end
 
       def create
-        @list = List.new(list_params)
-        @list.user_id = @user.id
-
-        if list.save
-          render json: @list, status: :success
+        @list = List.new(list_params) 
+        @list.user_id = @user.id 
+        if @list.save
+          render json: @list
         else
           render json: @list.errors, status: :unprocessable_entity
         end
       end
 
+      def update
+        if @list.update(list_params)
+        else
+          render json: @list.errors, status: :errors
+        end
+      end
+
       def destroy
         if @list.destroy
-          render status: :success
         else
           render status: :errors
         end
