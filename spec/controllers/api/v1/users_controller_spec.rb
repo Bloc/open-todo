@@ -32,7 +32,7 @@ describe Api::V1::UsersController do
       params = { user: { username: 'testuser', password: 'testpass' }}
       post :create, params
 
-      #expect(response).to be_success
+      expect(response).to be_success
       expect(json).to eq(params['user'])
       expect(User.last.username).to eq('testuser')
     end

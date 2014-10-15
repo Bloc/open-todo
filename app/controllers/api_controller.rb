@@ -1,5 +1,5 @@
 class ApiController < ApplicationController
-before_filter :restrict_access
+#before_filter :restrict_access
 
 private
   def restrict_access
