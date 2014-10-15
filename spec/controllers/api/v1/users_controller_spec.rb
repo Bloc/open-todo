@@ -8,10 +8,10 @@ describe Api::V1::UsersController do
 
   describe "#create" do
     it "returns a new user from username and password params" do
-      params = { user: {username: 'testuser', password: 'testpass' }}
+      params = { user: { username: 'testuser', password: 'testpass' }}
       post :create, params
 
-      expect(response).to be_success
+      expect(response.status).to be_success
       expect(json).to eq(params['user'])
       expect(User.last.username).to eq('testuser')
     end
@@ -20,12 +20,14 @@ describe Api::V1::UsersController do
       post :create, { user: { username: 'testuser' }}
 
       expect(response).to be_error
+      expect(response.body).to include("password")
     end
 
     it "returns an error when not given a username" do
       post :create, { user: { password: 'testpass' }}
       
       expect(response).to be_error
+      expect(response.body).to include("username")
     end
   end
 
