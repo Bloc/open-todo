@@ -10,23 +10,24 @@ describe Api::V1::UsersController do
     it "returns a new user from username and password params" do
       params = { user: { username: 'testuser', password: 'testpass' }}
       post :create, params
-
-      expect(response.status).to be_success
-      expect(json).to eq(params['user'])
-      expect(User.last.username).to eq('testuser')
+      last_user = User.last
+      
+      expect(response.status).to eq(200) 
+      expect(json).to eq({"user"=>{"id"=>last_user.id, "username"=>last_user.username}})
+      expect(User.last.username).to eq(last_user.username)
     end
 
     it "returns an error when not given a password" do
       post :create, { user: { username: 'testuser' }}
 
-      expect(response).to be_error
+      expect(response.status).to eq(422)
       expect(response.body).to include("password")
     end
 
     it "returns an error when not given a username" do
       post :create, { user: { password: 'testpass' }}
       
-      expect(response).to be_error
+      expect(response.status).to eq(422)
       expect(response.body).to include("username")
     end
   end

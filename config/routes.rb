@@ -3,11 +3,11 @@ Todo::Application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
       resources :users, except: [:destroy, :new] do 
-        #resources :lists, only: [:index]
+        resources :lists
       end
 
       resources :lists do
-        resources :items, except: [:destroy, :index]
+        resources :items, except: [:destroy]
       end
 
       resources :items, only: [:destroy]

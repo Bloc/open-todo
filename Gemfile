@@ -27,7 +27,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'  
   gem 'rspec'
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers'
 end
 
 # Use Uglifier as compressor for JavaScript assets
