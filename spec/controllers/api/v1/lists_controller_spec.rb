@@ -83,7 +83,7 @@ describe Api::V1::ListsController do
     end
   end
 
-  describe "#create", focus: true do
+  describe "#create" do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
