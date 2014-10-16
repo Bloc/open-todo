@@ -13,6 +13,10 @@ module Api
       end
 
       def create
+        #puts "======"
+        #puts "list owner is #{@list.user_id}"
+        #puts "authorized_user is #{@authorized_user}"
+        #puts "======"
         @list = List.new(list_params) 
         @list.user_id = @user.id 
         if @list.save
@@ -23,18 +27,20 @@ module Api
       end
 
       def update
-        if @list.update(list_params)
+        if @list.user_id == @authorized_user
+          @list.update(list_params) 
           render nothing: true
         else
-          render json: @list.errors, status: :errors
+          render nothing: true, status: :unauthorized
         end
       end
 
       def destroy
-        if @list.destroy
+        if @list.user_id == @authorized_user
+          @list.destroy
           render nothing: true
         else
-          render json: @list.errors, status: :errors
+          render nothing: true, status: :unauthorized
         end
       end
 

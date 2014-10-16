@@ -138,31 +138,31 @@ describe Api::V1::ListsController do
     end
   end
 
-  describe "#update" do
+  describe "#update", focus: true do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
-      @list = create(:list, user: @user)
       authWithToken(@api.access_token)
     end
 
-    context "with correct user's password" do
-      it "updates a list name" do
-        params = { user_id: @user.id, id: @list.id, list: {name: 'new_list_name', password: @user.password }}
-        patch :update, params
+    it "updates a list name that belongs to the authorized user" do
+      @list = create(:list, user: @user)
+      params = { user_id: @user.id, id: @list.id, list: {name: 'new_list_name'}}
+      patch :update, params
 
-        expect(response.status).to eq(200) 
-        expect(List.last.name).to eq('new_list_name')
-      end
+      expect(response.status).to eq(200) 
+      expect(List.last.name).to eq('new_list_name')
     end
 
-    context "without correct user's password" do
-      it "it errors" do
-        params = { user_id: @user.id, id: @list.id, list: { name: @list.name, permissions: @list.permissions, password: 'wrongpass' }}
-        patch :update, params
 
-        expect(response.status).to eq(400) 
-      end
+    it "fails to update a list that belongs to another user" do
+      other_user = create(:user)
+      other_list = create(:list, user: other_user, name: 'original_name')
+      params = { user_id: other_user.id, id: other_list.id, list: {name: 'other_list_name'}}
+      patch :update, params
+
+      expect(response.status).to eq(401) 
+      expect(List.last.name).to eq('original_name')
     end
 
     after do
@@ -177,9 +177,9 @@ describe Api::V1::ListsController do
       authWithToken(@api.access_token)
     end
 
-    it "deletes a list", focus: true do
-      list = create(:list)
-      params = {user_id: @user.id, id: list.id, password: @user.password}
+    it "deletes a list that belongs to the authorized user" do
+      list = create(:list, user_id: @user.id)
+      params = {user_id: @user.id, id: list.id}
       delete :destroy, params
 
       expect(response.status).to eq(200) 
@@ -189,14 +189,12 @@ describe Api::V1::ListsController do
     it "fails to delete another user's list" do
       other_user = create(:user)
       other_list = create(:list, user: other_user)
+      params = {user_id: @user.id, id: other_list.id}
+      delete :destroy, params
+      
+      expect( List.count ).to eq(1)
+      expect(response.status).to eq(401) 
 
-      assert_raises(ActiveRecord::RecordNotFound) do
-        params = {user_id: @user.id, id: other_list.id, password: @user.password}
-        delete :destroy, params
-      end
-
-      other_list.reload
-      expect(assigns(:list)).to be_nil
     end
 
     after do
