@@ -4,6 +4,10 @@ include ActionController::MimeResponds
 class ApiController < ApplicationController
 before_filter :restrict_access
 
+rescue_from ActiveRecord::RecordNotFound do
+  render nothing: true, status: :bad_request
+end
+
 private
 
   def restrict_access

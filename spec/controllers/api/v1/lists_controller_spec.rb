@@ -49,9 +49,17 @@ describe Api::V1::ListsController do
           }
         )
       end
+
+      it "gets error for invalid user" do
+        authWithToken(@api.access_token)
+        params = { user_id: "100", list: {} }
+        get :index, params
+
+        expect(response.status).to eq(400) 
+      end
     end
 
-    context "for all users" do
+    context "when handling all users" do
       it "returns all visible and open lists" do
         authWithToken(@api.access_token)
         get :index
@@ -62,7 +70,8 @@ describe Api::V1::ListsController do
             [
               { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user.id, 'permissions' => @open_list.permissions },
               { 'id' => @viewable_list.id, 'name' => @viewable_list.name, 'user_id' => @user.id, 'permissions' => @viewable_list.permissions },
-              { 'id' => @open_list2.id, 'name' => @open_list.name, 'user_id' => @user2.id, 'permissions' => @open_list.permissions }
+              { 'id' => @open_list2.id, 'name' => @open_list2.name, 'user_id' => @user2.id, 'permissions' => @open_list2.permissions },
+              { 'id' => @viewable_list2.id, 'name' => @viewable_list2.name, 'user_id' => @user2.id, 'permissions' => @viewable_list2.permissions }
             ]
           }
         )
@@ -104,7 +113,7 @@ describe Api::V1::ListsController do
     end
     
     it "fails with blank permission" do
-      params = { user_id: @user.id, list: {name: 'test_list'}}
+      params = { user_id: @user.id, list: {name: 'test_list', permissions: ''}}  #create is successful though if permission symbol is omitted
       post :create, params
 
       expect(response.status).to eq(422) 

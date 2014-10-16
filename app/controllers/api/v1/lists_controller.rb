@@ -1,16 +1,21 @@
 module Api
   module V1
     class ListsController < ApiController
-      before_action :set_user
+      before_action :set_user, except: [:index]
       before_action :set_list, only: [:show, :edit, :update, :destroy]
 
       def index
-        if @user.id == @authorized_user
-          render json: @user.lists.owner(@user)
-        elsif @user.id != @authorized_user
-          render json: @user.lists.not_private
-        else
+        if params[:user_id] == nil
           render json: List.all.not_private
+        else
+          set_user
+          if @user.id == @authorized_user
+            render json: @user.lists.owner(@user)
+          elsif @user.id != @authorized_user
+            render json: @user.lists.not_private
+          else
+            render nothing: true, status: :bad_request
+          end
         end
       end
 
