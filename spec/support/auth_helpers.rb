@@ -1,9 +1,9 @@
 module AuthHelpers
-  def authWithToken (access_token)
-    request.headers['ACCESS-TOKEN'] = "#{access_token}"
+  def authWithToken(access_token)
+    request.headers['X-ACCESS-TOKEN'] = "#{access_token}"
   end
 
   def clearToken
-    request.headers['ACCESS-TOKEN'] = nil
+    request.headers['X-ACCESS-TOKEN'] = nil
   end
 end

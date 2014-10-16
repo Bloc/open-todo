@@ -18,9 +18,15 @@ class User < ActiveRecord::Base
     end
   end
 
+  after_create :create_api_key
+
   private
 
   def owns?(list)
     list.user_id == id
+  end
+
+  def create_api_key
+    ApiKey.create user: self
   end
 end

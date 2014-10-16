@@ -4,6 +4,8 @@ describe Api::V1::UsersController do
 
   before do
     User.destroy_all
+    @api = create(:api_key)
+    authWithToken(@api.access_token)
   end
 
   describe "#create" do
@@ -11,7 +13,7 @@ describe Api::V1::UsersController do
       params = { user: { username: 'testuser', password: 'testpass' }}
       post :create, params
       last_user = User.last
-      
+
       expect(response.status).to eq(200) 
       expect(json).to eq({"user"=>{"id"=>last_user.id, "username"=>last_user.username}})
       expect(User.last.username).to eq(last_user.username)
@@ -52,4 +54,9 @@ describe Api::V1::UsersController do
       )
     end
   end
+
+  after do
+    clearToken
+  end
+
 end
