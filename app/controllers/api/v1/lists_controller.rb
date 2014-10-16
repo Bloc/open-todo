@@ -24,6 +24,7 @@ module Api
 
       def update
         if @list.update(list_params)
+          render nothing: true
         else
           render json: @list.errors, status: :errors
         end
@@ -31,8 +32,9 @@ module Api
 
       def destroy
         if @list.destroy
+          render nothing: true
         else
-          render status: :errors
+          render json: @list.errors, status: :errors
         end
       end
 

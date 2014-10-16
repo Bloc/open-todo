@@ -148,7 +148,7 @@ describe Api::V1::ListsController do
 
     context "with correct user's password" do
       it "updates a list name" do
-        params = { list_id: @list.id, list: {name: 'new_list_name', password: @user.password }}
+        params = { user_id: @user.id, id: @list.id, list: {name: 'new_list_name', password: @user.password }}
         patch :update, params
 
         expect(response.status).to eq(200) 
@@ -158,7 +158,7 @@ describe Api::V1::ListsController do
 
     context "without correct user's password" do
       it "it errors" do
-        params = { list_id: @list.id, list: { name: @list.name, permissions: @list.permissions, password: 'wrongpass' }}
+        params = { user_id: @user.id, id: @list.id, list: { name: @list.name, permissions: @list.permissions, password: 'wrongpass' }}
         patch :update, params
 
         expect(response.status).to eq(400) 
@@ -179,7 +179,7 @@ describe Api::V1::ListsController do
 
     it "deletes a list", focus: true do
       list = create(:list)
-      params = {lists_id: list.id, password: @user.password}
+      params = {user_id: @user.id, id: list.id, password: @user.password}
       delete :destroy, params
 
       expect(response.status).to eq(200) 
@@ -191,11 +191,11 @@ describe Api::V1::ListsController do
       other_list = create(:list, user: other_user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        params = {list_id: other_list.id, password: @user.password}
+        params = {user_id: @user.id, id: other_list.id, password: @user.password}
         delete :destroy, params
       end
 
-      list.reload
+      other_list.reload
       expect(assigns(:list)).to be_nil
     end
 
