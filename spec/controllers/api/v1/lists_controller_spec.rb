@@ -52,7 +52,7 @@ describe Api::V1::ListsController do
     end
 
     context "for all users" do
-      xit "returns all visible and open lists" do
+      it "returns all visible and open lists" do
         authWithToken(@api.access_token)
         get :index
 

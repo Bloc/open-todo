@@ -5,7 +5,13 @@ module Api
       before_action :set_list, only: [:show, :edit, :update, :destroy]
 
       def index
-        render json: @user.lists
+        if @user.id == @authorized_user
+          render json: @user.lists.owner(@user)
+        elsif @user.id != @authorized_user
+          render json: @user.lists.not_private
+        else
+          render json: List.all.not_private
+        end
       end
 
       def show
@@ -13,10 +19,7 @@ module Api
       end
 
       def create
-        #puts "======"
-        #puts "list owner is #{@list.user_id}"
-        #puts "authorized_user is #{@authorized_user}"
-        #puts "======"
+        
         @list = List.new(list_params) 
         @list.user_id = @user.id 
         if @list.save
