@@ -74,63 +74,40 @@ describe Api::V1::ListsController do
     end
   end
 
-  describe "#create" do
+  describe "#create", focus: true do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
       authWithToken(@api.access_token)
     end
 
-    context "with correct user's password" do
-      it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
-        params = { user_id: @user.id, list: {name: 'test_list', permissions: 'open', password: @user.password}}
-        post :create, params
-        last_list = List.last
+    it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
+      params = { user_id: @user.id, list: {name: 'test_list', permissions: 'open', password: @user.password}}
+      post :create, params
+      last_list = List.last
 
-        expect(response.status).to eq(200) 
-        expect(json).to eq({"list"=>{"id"=>last_list.id, "name"=>last_list.name, "user_id"=>last_list.user_id, "permissions"=>last_list.permissions}})
-        expect(last_list.name).to eq('test_list')
+      expect(response.status).to eq(200) 
+      expect(json).to eq({"list"=>{"id"=>last_list.id, "name"=>last_list.name, "user_id"=>last_list.user_id, "permissions"=>last_list.permissions}})
+      expect(last_list.name).to eq('test_list')
 
-        post :create, params
-        expect(response.status).to eq(422)
-        expect(List.all.count).to eq 1      
-      end
+      post :create, params
+      expect(response.status).to eq(422)
+      expect(List.all.count).to eq 1      
     end
 
-    context "without correct user's password" do
-      it "it errors" do
-        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open', password: 'wrongpass' }}
-        post :create, params
+    
+    it "fails without a valid permission type" do
+      params = { user_id: @user.id, list: { name: 'test_list', permissions: 'wrongperm', password: @user.password }}
+      post :create, params
 
-        expect(response.status).to eq(422) 
-      end
+      expect(response.status).to eq(422) 
     end
+    
+    it "fails with blank permission" do
+      params = { user_id: @user.id, list: { name: 'test_list', password: @user.password }}
+      post :create, params
 
-    context "with blank password" do
-      it "it errors" do
-        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'open' }}
-        post :create, params
-
-        expect(response.status).to eq(422) 
-      end
-    end
-
-    context "without valid permission" do
-      it "it errors" do
-        params = { user_id: @user.id, list: { name: 'test_list', permissions: 'wrongperm', password: @user.password }}
-        post :create, params
-
-        expect(response.status).to eq(422) 
-      end
-    end
-
-    context "with blank permission" do
-      it "it errors" do
-        params = { user_id: @user.id, list: { name: 'test_list', password: @user.password }}
-        post :create, params
-
-        expect(response.status).to eq(422) 
-      end
+      expect(response.status).to eq(422) 
     end
 
     after do
@@ -138,7 +115,7 @@ describe Api::V1::ListsController do
     end
   end
 
-  describe "#update", focus: true do
+  describe "#update" do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
