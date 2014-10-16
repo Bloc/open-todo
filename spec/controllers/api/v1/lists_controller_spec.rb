@@ -151,6 +151,13 @@ describe Api::V1::ListsController do
       expect(List.last.name).to eq('original_name')
     end
 
+    it "fails to update an invalid list" do
+      params = { user_id: @user.id, id: "100", list: {name: 'new_list_name'}}
+      patch :update, params
+
+      expect(response.status).to eq(400) 
+    end
+
     after do
       clearToken
     end
@@ -180,7 +187,13 @@ describe Api::V1::ListsController do
       
       expect( List.count ).to eq(1)
       expect(response.status).to eq(401) 
+    end
 
+    it "fails to delete an invalid list" do
+      params = {user_id: @user.id, id: "100"}
+      delete :destroy, params
+
+      expect(response.status).to eq(400)
     end
 
     after do

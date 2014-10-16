@@ -24,7 +24,6 @@ module Api
       end
 
       def create
-        
         @list = List.new(list_params) 
         @list.user_id = @user.id 
         if @list.save
