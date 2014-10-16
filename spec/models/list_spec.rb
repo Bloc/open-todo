@@ -26,4 +26,6 @@ describe List do
       list.remove("Not There").should be_false
     end
   end
+
+  #add specs for new scopes
 end
