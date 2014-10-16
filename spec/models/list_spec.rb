@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe List do
 
-  let(:list) { FactoryGirl.create(:list) }
+  let(:list) { create(:list) }
   
   describe "add" do
     it "adds the description to the item list" do

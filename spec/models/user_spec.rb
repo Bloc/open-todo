@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do 
   describe "authenticate?" do
 
-    let(:user) { FactoryGirl.build(:user, password: 'password') }
+    let(:user) { build(:user, password: 'password') }
     
     it "tests for password parity" do
       user.authenticate?('password').should be_true
@@ -14,8 +14,8 @@ describe User do
   describe "can?" do
 
     before do 
-      @user = FactoryGirl.create(:user)
-      @list = FactoryGirl.create(:list, user: @user)
+      @user = create(:user)
+      @list = create(:list, user: @user)
     end
 
     it "allows owners to do whatever they want" do
@@ -26,7 +26,7 @@ describe User do
     end
 
     it "toggles abilities by permissions" do
-      user2 = FactoryGirl.create(:user)
+      user2 = create(:user)
       @list.user.should_not be user2
       @list.permissions.should == 'private'
 

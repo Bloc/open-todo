@@ -5,16 +5,17 @@ describe Api::V1::ItemsController do
   describe "#index", focus: true do
     before do
       user = create(:user, password: 'testpass')
-      list = create(:list, user: user)
-      list2 = create(:list, permission: 'private')
-      item = create(:item, description: 'item1', list_id: list.id)
-      item2 = create(:item, description: 'item2', list_id: list.id)
-      item3 = create(:item, description: 'item3', list_id: list2.id)
+      personal_list = create(:list, user: user, permissions: 'private')
+      open_list = create(:list, permissions: 'open')
+      private_list = create(:list, permissions: 'private')
+      item = create(:item, description: 'item1', list: list.id)
+      item2 = create(:item, description: 'item2', list: list2.id)
+      item3 = create(:item, description: 'item3', list: list3.id)
     end
 
-    context "with permission for the list" do
+    context "authorized user is the owner of the list" do
       it "returns all uncompleted items associated with a list" do
-        params = {list_id: "1"}
+        params = {id: personal_list.id, items: {}}
         get :index, params
 
         expect(response).to be_success
@@ -22,9 +23,18 @@ describe Api::V1::ItemsController do
       end
     end
 
-    context "without permission for the list" do
+    context "authorized user when looking at a nonprivate list" do
       it "returns error" do
-        params = {id: '2'}
+        params = {id: open_list.id, items: {}}
+        get :index, params
+
+        expect(response).to be_error
+      end
+    end
+
+    context "authorized user when looking at a private list" do
+      it "returns error" do
+        params = {id: private_list.id, items: {}}
         get :index, params
 
         expect(response).to be_error
