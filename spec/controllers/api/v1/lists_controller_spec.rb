@@ -5,7 +5,9 @@ describe Api::V1::ListsController do
   describe "#index" do
     before do
       @user = create(:user, password: 'testpass')
+      @api = create(:api_key, user: @user)
       @user2 = create(:user)
+      @api2 = create(:api_key, user: @user2)
       @open_list = create(:list, user: @user, name: 'open_list', permissions: 'open')
       @viewable_list = create(:list, user: @user, name: 'viewable_list', permissions: 'viewable')
       @private_list = create(:list, user: @user, name: 'private_list', permissions: 'private')
@@ -14,7 +16,8 @@ describe Api::V1::ListsController do
 
     context "with correct user's password" do
       it "returns all lists associated with the user" do
-        params = { user_id: @user.id, list: { password: 'testpass'}}
+        authWithToken(@api.access_token)
+        params = { user_id: @user.id, list: {password: @user.password} }
         get :index, params
 
         expect(response.status).to eq(200) 
@@ -32,8 +35,8 @@ describe Api::V1::ListsController do
 
     context "without correct user's password" do
       it "returns only visible and open lists" do
-
-        params = { user_id: @user.id, list: {}}
+        authWithToken(@api.access_token)
+        params = { user_id: @user.id, list: {} }
         get :index, params
 
         expect(response.status).to eq(200) 
@@ -50,7 +53,7 @@ describe Api::V1::ListsController do
 
     context "for all users" do
       xit "returns all visible and open lists" do
-
+        authWithToken(@api.access_token)
         get :index
 
         expect(response.status).to eq(200)
@@ -65,16 +68,21 @@ describe Api::V1::ListsController do
         )
       end
     end
+
+    after do
+      clearToken
+    end
   end
 
   describe "#create" do
     before do
       @user = create(:user, password: 'testpass')
+      @api = create(:api_key, user: @user)
+      authWithToken(@api.access_token)
     end
 
     context "with correct user's password" do
       it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
-
         params = { user_id: @user.id, list: {name: 'test_list', permissions: 'open', password: @user.password}}
         post :create, params
         last_list = List.last
@@ -124,17 +132,22 @@ describe Api::V1::ListsController do
         expect(response.status).to eq(422) 
       end
     end
+
+    after do
+      clearToken
+    end
   end
 
   describe "#update" do
     before do
       @user = create(:user, password: 'testpass')
+      @api = create(:api_key, user: @user)
       @list = create(:list, user: @user)
+      authWithToken(@api.access_token)
     end
 
     context "with correct user's password" do
       it "updates a list name" do
-
         params = { user_id: @user.id, list_id: @list.id, list: {name: 'new_list_name', password: @user.password }}
         patch :update, params
 
@@ -151,11 +164,17 @@ describe Api::V1::ListsController do
         expect(response.status).to eq(400) 
       end
     end
+
+    after do
+      clearToken
+    end
   end
 
   describe '#destroy' do
     before do
       @user = create(:user, password: 'testpass')
+      @api = create(:api_key, user: @user)
+      authWithToken(@api.access_token)
     end
 
     it "deletes a list", focus: true do
@@ -177,6 +196,10 @@ describe Api::V1::ListsController do
 
       list.reload
       expect(assigns(:list)).to be_nil
+    end
+
+    after do
+      clearToken
     end
   end
 end
