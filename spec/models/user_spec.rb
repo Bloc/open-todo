@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe User do 
-
   before do 
       @user = create(:user, password: 'password')
   end

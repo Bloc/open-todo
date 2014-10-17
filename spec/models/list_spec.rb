@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe List do
-
   before do 
     @user = create(:user)
     @list = create(:list, user: @user)
