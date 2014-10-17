@@ -13,6 +13,15 @@ module Api
         end
       end
 
+      def update
+        if (@list.permissions = "open") || (@list.user_id == @authorized_user)
+          @item.update(item_params) 
+          render nothing: true
+        else
+          render nothing: true, status: :unprocessable_entity
+        end
+      end
+
       def destroy
         if (@list.permissions = "open") || (@list.user_id == @authorized_user)
           @item.mark_complete

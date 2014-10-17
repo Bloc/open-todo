@@ -75,16 +75,16 @@ describe Api::V1::ItemsController do
 
     context "with permission for the list" do
       it "updates a item description" do
-        params = { list_id: @open_list.id, items: {id: @item.id, description: 'newitemname'}} 
-        put :update, params
+        params = { list_id: @open_list.id, id: @item.id, item: {description: 'newitemname'}} 
+        patch :update, params
 
         expect(response.status).to eq(200)
         expect(Item.last.name).to eq('newitemname')
       end
 
       it "updates a item to be complete" do
-        params = { list_id: @open_list.id, items: {id: @item.id, completed: 'true'}} 
-        put :update, params
+        params = { list_id: @open_list.id, id: @item.id, item: {completed: 'true'}} 
+        patch :update, params
 
         expect(response.status).to eq(200)
         expect(Item.last.completed).to eq true
@@ -93,15 +93,15 @@ describe Api::V1::ItemsController do
 
     context "without permission for the list" do
       it "updating a description returns an error" do
-        params = { list_id: @private_list.id, items: {id: @item.id, description: 'newitemname'}} 
-        put :update, params
+        params = { list_id: @private_list.id, id: @item.id, item: {description: 'newitemname'}} 
+        patch :update, params
 
         expect(response.status).to eq(400)
       end
 
       it "updating a completion returns an error" do
-        params = { list_id: @private_list.id, items: {id: @item.id, completed: 'true'}} 
-        put :update, params
+        params = { list_id: @private_list.id, id: @item.id, item: {completed: 'true'}} 
+        patch :update, params
 
         expect(response.status).to eq(400)
       end
@@ -123,7 +123,6 @@ describe Api::V1::ItemsController do
         delete :destroy, params
 
         expect(response.status).to eq(200)
-        puts @item.completed
         expect(@item.completed).to eq true
       end
     end

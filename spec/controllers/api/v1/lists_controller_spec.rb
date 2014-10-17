@@ -26,9 +26,9 @@ describe Api::V1::ListsController do
         expect(json).to eq(
           { 'lists' => 
             [
-              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user.id, 'permissions' => @open_list.permissions },
-              { 'id' => @viewable_list.id, 'name' => @viewable_list.name, 'user_id' => @user.id, 'permissions' => @viewable_list.permissions },
-              { 'id' => @private_list.id, 'name' => @private_list.name, 'user_id' => @user.id, 'permissions' => @private_list.permissions }
+              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user.id, 'permissions' => @open_list.permissions, "items"=>[] },
+              { 'id' => @viewable_list.id, 'name' => @viewable_list.name, 'user_id' => @user.id, 'permissions' => @viewable_list.permissions, "items"=>[] },
+              { 'id' => @private_list.id, 'name' => @private_list.name, 'user_id' => @user.id, 'permissions' => @private_list.permissions, "items"=>[] }
             ]
           }
         )
@@ -43,8 +43,8 @@ describe Api::V1::ListsController do
         expect(json).to eq(
           { 'lists' => 
             [
-              { 'id' => @open_list2.id, 'name' => @open_list2.name, 'user_id' => @user2.id, 'permissions' => @open_list2.permissions },
-              { 'id' => @viewable_list2.id, 'name' => @viewable_list2.name, 'user_id' => @user2.id, 'permissions' => @viewable_list2.permissions }
+              { 'id' => @open_list2.id, 'name' => @open_list2.name, 'user_id' => @user2.id, 'permissions' => @open_list2.permissions, "items"=>[] },
+              { 'id' => @viewable_list2.id, 'name' => @viewable_list2.name, 'user_id' => @user2.id, 'permissions' => @viewable_list2.permissions,"items"=>[] }
             ]
           }
         )
@@ -68,10 +68,10 @@ describe Api::V1::ListsController do
         expect(json).to eq(
           { 'lists' => 
             [
-              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user.id, 'permissions' => @open_list.permissions },
-              { 'id' => @viewable_list.id, 'name' => @viewable_list.name, 'user_id' => @user.id, 'permissions' => @viewable_list.permissions },
-              { 'id' => @open_list2.id, 'name' => @open_list2.name, 'user_id' => @user2.id, 'permissions' => @open_list2.permissions },
-              { 'id' => @viewable_list2.id, 'name' => @viewable_list2.name, 'user_id' => @user2.id, 'permissions' => @viewable_list2.permissions }
+              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user.id, 'permissions' => @open_list.permissions, "items"=>[] },
+              { 'id' => @viewable_list.id, 'name' => @viewable_list.name, 'user_id' => @user.id, 'permissions' => @viewable_list.permissions, "items"=>[]},
+              { 'id' => @open_list2.id, 'name' => @open_list2.name, 'user_id' => @user2.id, 'permissions' => @open_list2.permissions, "items"=>[] },
+              { 'id' => @viewable_list2.id, 'name' => @viewable_list2.name, 'user_id' => @user2.id, 'permissions' => @viewable_list2.permissions, "items"=>[] }
             ]
           }
         )
@@ -81,52 +81,63 @@ describe Api::V1::ListsController do
     after do
       clearToken
     end
-  end
+  end 
 
-  describe "#show", focus: true do
+  describe "#show" do
     before do
-      @user = create(:user, password: 'testpass')
+      @user = create(:user)
       @api = create(:api_key, user: @user)
+
+      @user2 = create(:user)
+
       @personal_list = create(:list, user: @user, permissions: 'private')
-      @open_list = create(:list, permissions: 'open')
-      @private_list = create(:list, permissions: 'private')
-      @item1 = create(:item, description: 'item1', list_id: @open_list.id)
-      @item2 = create(:item, description: 'item2', list_id: @personal_list.id)
+      @item1 = create(:item, description: 'item1', list_id: @personal_list.id)
+      @item1_complete = create(:item, description: 'item1_complete', list_id: @personal_list.id, completed: true)
+
+      @open_list = create(:list, user: @user2, permissions: 'open')
+      @item2 = create(:item, description: 'item2', list_id: @open_list.id, completed: true)
+
+      @private_list = create(:list, user: @user2, permissions: 'private')      
       @item3 = create(:item, description: 'item3', list_id: @private_list.id)
     end
 
     context "authorized user is the owner of the list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {id: @personal_list.id, items: {}}
-        get :index, params
+        params = {list_id: @personal_list.id, items:{}}
+        get :show, params
 
         expect(response.status).to eq(200) 
-        puts response.body
+        expect(json).to eq(
+          { 'lists' => 
+            [
+              { 'id' => @personal_list.id, 'name' => @personal_list.name, 'user_id' => @user.id, 'permissions' => @personal_list.permissions, "items"=>[{"id"=> @item1.id, "description"=> @item1.description , "completed" => @item1.completed }]}
+            ]
+          }
+        )
       end
     end
 
     context "authorized user when looking at a nonprivate list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {id: @open_list.id, items: {}}
-        get :index, params
+        params = {list_id: @open_list.id, items: {}}
+        get :show, params
 
         expect(response.status).to eq(200)
-        puts response.body 
       end
     end
 
     context "authorized user when looking at a private list" do
       it "returns error" do
         authWithToken(@api.access_token)
-        params = {id: @private_list.id, items: {}}
-        get :index, params
+        params = {list_id: @private_list.id, items: {}}
+        get :show, params
 
         expect(response.status).to eq(400) 
       end
     end
-  end   
+  end 
 
   describe "#create" do
     before do
@@ -141,7 +152,7 @@ describe Api::V1::ListsController do
       last_list = List.last
 
       expect(response.status).to eq(200) 
-      expect(json).to eq({"list"=>{"id"=>last_list.id, "name"=>last_list.name, "user_id"=>last_list.user_id, "permissions"=>last_list.permissions}})
+      expect(json).to eq({"list"=>{"id"=>last_list.id, "name"=>last_list.name, "user_id"=>last_list.user_id, "permissions"=>last_list.permissions, "items"=>[]}})
       expect(last_list.name).to eq('test_list')
 
       post :create, params
