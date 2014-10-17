@@ -6,14 +6,14 @@ describe User do
       @user = create(:user, password: 'password')
   end
 
-  describe "authenticate?" do
+  describe "#authenticate?" do
     it "tests for password parity" do
       expect(@user.authenticate?('password')).to be_true
       expect(@user.authenticate?('otherpass')).to be_false
     end
   end
 
-  describe "can?" do
+  describe "#can?" do
     before do 
       @list = create(:list, user: @user, permissions: 'private')
     end
@@ -47,8 +47,16 @@ describe User do
     end
   end
 
+  describe "#create_api_key" do
+    it "creates a key automatically for each user" do
+      expect(@user.api_key).not_to be_nil
+      expect(@user.api_key.access_token.length).to be 32
+    end
+  end
+
   describe "ActiveModel validations" do
     it { expect(@user).to validate_presence_of(:username).with_message( /can't be blank/ ) }
+    it { expect(@user).to validate_presence_of(:password).with_message( /can't be blank/ ) }
     it { expect(@user).to validate_uniqueness_of(:username) }
   end
 
