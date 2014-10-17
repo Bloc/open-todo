@@ -1,7 +1,7 @@
 module Api
   module V1
     class ListsController < ApiController
-      before_action :set_user, except: [:index]
+      before_action :set_user, except: [:index, :show]
       before_action :set_list, only: [:show, :edit, :update, :destroy]
 
       def index
@@ -20,9 +20,8 @@ module Api
       end
 
       def show
-        set_list
         if (@list.permissions == "open") || (@list.user_id == @authorized_user)
-          render json: @list.items.completed, each_serializer: ItemSerializer
+          render json: @list
         else
           render json: @list.errors, status: :error
         end

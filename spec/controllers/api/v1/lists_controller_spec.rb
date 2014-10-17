@@ -55,7 +55,7 @@ describe Api::V1::ListsController do
         params = { user_id: "100", list: {} }
         get :index, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(404) 
       end
     end      
 
@@ -83,14 +83,14 @@ describe Api::V1::ListsController do
     end
   end 
 
-  describe "#show" do
+  describe "#show", focus: true do
     before do
       @user = create(:user)
       @api = create(:api_key, user: @user)
 
       @user2 = create(:user)
 
-      @personal_list = create(:list, user: @user, permissions: 'private')
+      @personal_list = create(:list, user: @user, permissions: 'viewable')
       @item1 = create(:item, description: 'item1', list_id: @personal_list.id)
       @item1_complete = create(:item, description: 'item1_complete', list_id: @personal_list.id, completed: true)
 
@@ -105,15 +105,14 @@ describe Api::V1::ListsController do
     context "authorized user is the owner of the list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {list_id: @personal_list.id}
+        params = {id: @personal_list.id}
         get :show, params
 
         expect(response.status).to eq(200) 
         expect(json).to eq(
-          { 'lists' => 
-            [
-              { 'id' => @personal_list.id, 'name' => @personal_list.name, 'user_id' => @user.id, 'permissions' => @personal_list.permissions, "items"=>[{"id"=> @item1.id, "description"=> @item1.description , "completed" => @item1.completed }]}
-            ]
+          { 'list' => 
+              { 'id' => @personal_list.id, 'name' => @personal_list.name, 'user_id' => @user.id, 'permissions' => @personal_list.permissions, 
+                "items"=>[{"id"=> @item1.id, "description"=> @item1.description , "completed" => @item1.completed }]}
           }
         )
       end
@@ -122,15 +121,14 @@ describe Api::V1::ListsController do
     context "authorized user when looking at a nonprivate list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {list_id: @open_list.id}
+        params = {id: @open_list.id}
         get :show, params
 
         expect(response.status).to eq(200)
         expect(json).to eq(
-          { 'lists' => 
-            [
-              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user2.id, 'permissions' => @open_list.permissions, "items"=>[{"id"=> @item2.id, "description"=> @item2.description , "completed" => @item2.completed }]}
-            ]
+          { 'list' => 
+              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user2.id, 'permissions' => @open_list.permissions, 
+                "items"=>[{"id"=> @item2.id, "description"=> @item2.description , "completed" => @item2.completed }]}
           }
         )
       end
@@ -139,7 +137,7 @@ describe Api::V1::ListsController do
     context "authorized user when looking at a private list" do
       it "returns error" do
         authWithToken(@api.access_token)
-        params = {list_id: @private_list.id}
+        params = {id: @private_list.id}
         get :show, params
 
         expect(response.status).to eq(400) 
@@ -219,7 +217,7 @@ describe Api::V1::ListsController do
       params = { user_id: @user.id, id: "100", list: {name: 'new_list_name'}}
       patch :update, params
 
-      expect(response.status).to eq(400) 
+      expect(response.status).to eq(404) 
     end
 
     after do
@@ -257,7 +255,7 @@ describe Api::V1::ListsController do
       params = {user_id: @user.id, id: "100"}
       delete :destroy, params
 
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(404)
     end
 
     after do
