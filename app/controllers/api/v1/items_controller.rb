@@ -27,7 +27,7 @@ module Api
           @item.mark_complete
           render nothing: true
         else
-          render nothing: true, status: :errors
+          render nothing: true, status: :unauthorized
         end
       end
 

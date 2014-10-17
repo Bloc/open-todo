@@ -140,7 +140,7 @@ describe Api::V1::ListsController do
         params = {id: @private_list.id}
         get :show, params
 
-        expect(response.status).to eq(400) 
+        expect(response.status).to eq(401) 
       end
     end
   end 

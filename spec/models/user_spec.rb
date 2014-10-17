@@ -15,7 +15,7 @@ describe User do
 
     before do 
       @user = create(:user)
-      @list = create(:list, user: @user)
+      @list = create(:list, user: @user, permissions: 'private')
     end
 
     it "allows owners to do whatever they want" do

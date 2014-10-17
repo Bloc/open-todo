@@ -23,7 +23,7 @@ module Api
         if (@list.permissions == "open") || (@list.user_id == @authorized_user)
           render json: @list
         else
-          render json: @list.errors, status: :error
+          render json: @list.errors, status: :unauthorized
         end
       end
 

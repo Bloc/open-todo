@@ -86,7 +86,7 @@ describe Api::V1::ItemsController do
       @item2 = create(:item, list_id: @private_list.id)
     end
 
-    context "when owned by the authorized user" do
+    context "when the authorized user owns the list" do
       it "updates a item description" do
         authWithToken(@api.access_token)
         params = { list_id: @open_list.id, id: @item.id, item: {description: 'newitemname'}} 
@@ -108,7 +108,7 @@ describe Api::V1::ItemsController do
       end
     end
 
-    context "without permission for the list" do
+    context "when the authorized user does not own the list" do
       it "updating a description returns an error" do
         authWithToken(@api.access_token)
         params = { list_id: @private_list.id, id: @item2.id, item: {description: 'newitemname'}} 
@@ -141,7 +141,7 @@ describe Api::V1::ItemsController do
       @private_item = create(:item, list_id: @private_list.id,  completed: 'false')
     end
 
-    context "with permission for the list" do
+    context "when the authorized user owns the list" do
       it "updates a item to be complete" do
         authWithToken(@api.access_token)
         params = { id: @item.id }
@@ -153,13 +153,13 @@ describe Api::V1::ItemsController do
       end
     end
 
-    context "without permission for the list" do
+    context "when the authorized user does not own the list" do
       it "returns an error" do
         authWithToken(@api.access_token)
         params = { id: @private_item.id }
         delete :destroy, params
 
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(401)
         @private_item.reload
         expect(@private_item.completed).to eq false
       end
