@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
-  has_one :api_keys, dependent: :destroy
-  has_many :lists
+  has_one :api_key, dependent: :destroy
+  has_many :lists, dependent: :destroy
   has_many :items, through: :lists
 
   validates_presence_of :password, :username
+  validates_uniqueness_of :username
 
   def authenticate?(pass)
     password == pass
