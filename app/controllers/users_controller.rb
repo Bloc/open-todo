@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 
   def show
     @lists = @user.lists
+    @access_token = ApiKey.where(user_id: @user.id).first.access_token
   end
 
   def new

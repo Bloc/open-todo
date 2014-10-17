@@ -2,7 +2,7 @@ class ListsController < ApplicationController
   before_action :set_user
   before_action :set_list, only: [:show, :edit, :update, :destroy]
 
-  def xxshow
+  def show
     @items = @list.items.completed
   end
 
