@@ -57,7 +57,7 @@ describe Api::V1::ListsController do
 
         expect(response.status).to eq(400) 
       end
-    end
+    end      
 
     context "when handling all users" do
       it "returns all visible and open lists" do
@@ -82,6 +82,51 @@ describe Api::V1::ListsController do
       clearToken
     end
   end
+
+  describe "#show", focus: true do
+    before do
+      @user = create(:user, password: 'testpass')
+      @api = create(:api_key, user: @user)
+      @personal_list = create(:list, user: @user, permissions: 'private')
+      @open_list = create(:list, permissions: 'open')
+      @private_list = create(:list, permissions: 'private')
+      @item1 = create(:item, description: 'item1', list_id: @open_list.id)
+      @item2 = create(:item, description: 'item2', list_id: @personal_list.id)
+      @item3 = create(:item, description: 'item3', list_id: @private_list.id)
+    end
+
+    context "authorized user is the owner of the list" do
+      it "returns all uncompleted items" do
+        authWithToken(@api.access_token)
+        params = {id: @personal_list.id, items: {}}
+        get :index, params
+
+        expect(response.status).to eq(200) 
+        puts response.body
+      end
+    end
+
+    context "authorized user when looking at a nonprivate list" do
+      it "returns all uncompleted items" do
+        authWithToken(@api.access_token)
+        params = {id: @open_list.id, items: {}}
+        get :index, params
+
+        expect(response.status).to eq(200)
+        puts response.body 
+      end
+    end
+
+    context "authorized user when looking at a private list" do
+      it "returns error" do
+        authWithToken(@api.access_token)
+        params = {id: @private_list.id, items: {}}
+        get :index, params
+
+        expect(response.status).to eq(400) 
+      end
+    end
+  end   
 
   describe "#create" do
     before do

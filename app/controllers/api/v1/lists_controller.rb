@@ -20,7 +20,12 @@ module Api
       end
 
       def show
-        render json: @list.items.completed
+        set_list
+        if @list.permissions != "private" || @list.user_id == @authorized_user
+          render json: @list.items.completed, each_serializer: ItemSerializer
+        else
+          render json: @list.errors, status: :error
+        end
       end
 
       def create
