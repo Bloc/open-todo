@@ -21,7 +21,7 @@ module Api
 
       def show
         set_list
-        if (@list.permissions = "open") || (@list.user_id == @authorized_user)
+        if (@list.permissions == "open") || (@list.user_id == @authorized_user)
           render json: @list.items.completed, each_serializer: ItemSerializer
         else
           render json: @list.errors, status: :error

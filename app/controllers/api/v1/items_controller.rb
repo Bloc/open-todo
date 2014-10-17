@@ -1,11 +1,11 @@
 module Api
   module V1
-    class ItemsController < ApplicationController
+    class ItemsController < ApiController
       before_action :set_item, only: [:update, :destroy]
       before_action :set_list
 
       def create
-        if (@list.permissions = "open") || (@list.user_id == @authorized_user)
+        if (@list.permissions == "open") || (@list.user_id == @authorized_user)
           @list.add(item_params[:description])
           render nothing: true
         else
@@ -14,7 +14,7 @@ module Api
       end
 
       def update
-        if (@list.permissions = "open") || (@list.user_id == @authorized_user)
+        if (@list.permissions == "open") || (@list.user_id == @authorized_user)
           @item.update(item_params) 
           render nothing: true
         else
@@ -23,7 +23,7 @@ module Api
       end
 
       def destroy
-        if (@list.permissions = "open") || (@list.user_id == @authorized_user)
+        if @list.user_id == @authorized_user
           @item.mark_complete
           render nothing: true
         else

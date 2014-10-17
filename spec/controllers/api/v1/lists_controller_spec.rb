@@ -95,7 +95,8 @@ describe Api::V1::ListsController do
       @item1_complete = create(:item, description: 'item1_complete', list_id: @personal_list.id, completed: true)
 
       @open_list = create(:list, user: @user2, permissions: 'open')
-      @item2 = create(:item, description: 'item2', list_id: @open_list.id, completed: true)
+      @item2 = create(:item, description: 'item2', list_id: @open_list.id)
+      @item2_complete = create(:item, description: 'item2_complete', list_id: @open_list.id, completed: true)
 
       @private_list = create(:list, user: @user2, permissions: 'private')      
       @item3 = create(:item, description: 'item3', list_id: @private_list.id)
@@ -104,7 +105,7 @@ describe Api::V1::ListsController do
     context "authorized user is the owner of the list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {list_id: @personal_list.id, items:{}}
+        params = {list_id: @personal_list.id}
         get :show, params
 
         expect(response.status).to eq(200) 
@@ -121,17 +122,24 @@ describe Api::V1::ListsController do
     context "authorized user when looking at a nonprivate list" do
       it "returns all uncompleted items" do
         authWithToken(@api.access_token)
-        params = {list_id: @open_list.id, items: {}}
+        params = {list_id: @open_list.id}
         get :show, params
 
         expect(response.status).to eq(200)
+        expect(json).to eq(
+          { 'lists' => 
+            [
+              { 'id' => @open_list.id, 'name' => @open_list.name, 'user_id' => @user2.id, 'permissions' => @open_list.permissions, "items"=>[{"id"=> @item2.id, "description"=> @item2.description , "completed" => @item2.completed }]}
+            ]
+          }
+        )
       end
     end
 
     context "authorized user when looking at a private list" do
       it "returns error" do
         authWithToken(@api.access_token)
-        params = {list_id: @private_list.id, items: {}}
+        params = {list_id: @private_list.id}
         get :show, params
 
         expect(response.status).to eq(400) 
