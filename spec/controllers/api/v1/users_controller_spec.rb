@@ -24,6 +24,7 @@ describe Api::V1::UsersController do
 
       expect(response.status).to eq(422)
       expect(response.body).to include("password")
+      expect(response.body).to include("blank")
     end
 
     it "returns an error when not given a username" do
@@ -31,6 +32,7 @@ describe Api::V1::UsersController do
       
       expect(response.status).to eq(422)
       expect(response.body).to include("username")
+      expect(response.body).to include("blank")
     end
   end
 
