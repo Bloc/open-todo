@@ -14,11 +14,12 @@ describe Api::V1::ListsController do
       @open_list2 = create(:list, user: @user2, name: 'open_list2', permissions: 'open')
       @viewable_list2 = create(:list, user: @user2, name: 'viewable_list2', permissions: 'viewable')
       @private_list2 = create(:list, user: @user2, name: 'private_list2', permissions: 'private')
+
+      authWithToken(@api.access_token)
     end
 
     context "authorized user" do
       it "gets all lists for their self" do
-        authWithToken(@api.access_token)
         params = { user_id: @user.id, list: {} }
         get :index, params
 
@@ -35,7 +36,6 @@ describe Api::V1::ListsController do
       end
     
       it "gets only visible and open lists for another user" do
-        authWithToken(@api.access_token)
         params = { user_id: @user2.id, list: {} }
         get :index, params
 
@@ -51,7 +51,6 @@ describe Api::V1::ListsController do
       end
 
       it "gets error for invalid user" do
-        authWithToken(@api.access_token)
         params = { user_id: "100", list: {} }
         get :index, params
 
@@ -61,7 +60,6 @@ describe Api::V1::ListsController do
 
     context "when handling all users" do
       it "returns all visible and open lists" do
-        authWithToken(@api.access_token)
         get :index
 
         expect(response.status).to eq(200)
@@ -100,11 +98,12 @@ describe Api::V1::ListsController do
 
       @private_list = create(:list, user: @user2, permissions: 'private')      
       @item3 = create(:item, description: 'item3', list_id: @private_list.id)
+
+      authWithToken(@api.access_token)
     end
 
     context "authorized user is the owner of the list" do
       it "returns all uncompleted items" do
-        authWithToken(@api.access_token)
         params = {id: @personal_list.id}
         get :show, params
 
@@ -120,7 +119,6 @@ describe Api::V1::ListsController do
 
     context "authorized user when looking at a nonprivate list" do
       it "returns all uncompleted items" do
-        authWithToken(@api.access_token)
         params = {id: @open_list.id}
         get :show, params
 
@@ -136,7 +134,6 @@ describe Api::V1::ListsController do
 
     context "authorized user when looking at a private list" do
       it "returns error" do
-        authWithToken(@api.access_token)
         params = {id: @private_list.id}
         get :show, params
 
@@ -149,6 +146,7 @@ describe Api::V1::ListsController do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
+
       authWithToken(@api.access_token)
     end
 
@@ -190,6 +188,7 @@ describe Api::V1::ListsController do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
+
       authWithToken(@api.access_token)
     end
 
@@ -229,6 +228,7 @@ describe Api::V1::ListsController do
     before do
       @user = create(:user, password: 'testpass')
       @api = create(:api_key, user: @user)
+
       authWithToken(@api.access_token)
     end
 

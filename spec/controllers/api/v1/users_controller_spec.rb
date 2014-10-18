@@ -58,5 +58,4 @@ describe Api::V1::UsersController do
   after do
     clearToken
   end
-
 end
