@@ -1,9 +1,7 @@
 require 'spec_helper'
 
-  describe "Users API" do
-
-    context "#index" do
-
+describe "Users API" do
+  context "#index" do
     before do
       User.destroy_all
       @api = create(:api_key)
