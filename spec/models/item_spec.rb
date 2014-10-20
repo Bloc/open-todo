@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Item do
   before do 
+    Item.destroy_all
     @user = create(:user)
     @list = create(:list, user: @user)
     @item = create(:item, list_id: @list.id)
@@ -23,7 +24,6 @@ describe Item do
 
   describe "ActiveModel validations" do
     it { should validate_inclusion_of(:completed).in_array([true, false]) }
-    #how do I test delegate?
   end
 
   describe "ActiveRecord associations" do

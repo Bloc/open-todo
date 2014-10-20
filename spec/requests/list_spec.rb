@@ -36,7 +36,7 @@ describe "List API" do
     end
   end
 
-  context "get /api/v1/user/id/lists for other" do
+  context "get /api/v1/user/id/lists for another" do
     before do
       User.destroy_all
       @user1 = create(:user)
@@ -52,6 +52,69 @@ describe "List API" do
       it { expect(response.status).to eq(200) }
       it { json["lists"].should be_a_kind_of(Array) }
       it { json["lists"].length.should eq 6 }
+    end
+  end
+
+  context "get /api/v1/lists/id" do
+    before do
+      User.destroy_all
+      @user = create(:user)
+      @api = create(:api_key, user: @user)
+      @list = create(:list, permissions: "open", user: @user)
+      create_list(:item, 3, list_id: @list.id, completed: false)
+      create(:item, list_id: @list.id, completed: true)
+      get "/api/v1/lists/#{@list.id}", nil, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+    end
+
+    describe "should show all uncompleted items" do
+      it { expect(response.status).to eq(200) }
+      it { json["list"]["items"].should be_a_kind_of(Array) }
+      it { json["list"]["items"].length.should eq 3 }
+    end
+  end
+
+  context "post /api/v1/lists/" do
+    before do
+      User.destroy_all
+      List.destroy_all
+      @user = create(:user)
+      @api = create(:api_key, user: @user)
+      post "/api/v1/lists/", {user_id: @user.id, list: {name: 'test_list', permissions: 'open'}}, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+    end
+
+    describe "should create a list" do
+      it { expect(response.status).to eq(200) }
+      it { expect(json["list"]["name"]).to include("test_list") }
+    end
+  end
+
+  context "patch /api/v1/lists/id" do
+    before do
+      User.destroy_all
+      List.destroy_all
+      @user = create(:user)
+      @api = create(:api_key, user: @user)
+      @list = create(:list, permissions: "open", user: @user)
+      patch "/api/v1/lists/#{@list.id}", {user_id: @user.id, list: {name: 'new_name', permissions: 'open'}}, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+    end
+
+    describe "should update a list" do
+      it { expect(response.status).to eq(200) }
+    end
+  end
+
+  context "delete /api/v1/lists/id" do
+    before do
+      User.destroy_all
+      List.destroy_all
+      @user = create(:user)
+      @api = create(:api_key, user: @user)
+      @list = create(:list, permissions: "open", user: @user)
+      delete "/api/v1/lists/#{@list.id}", {user_id: @user.id, list: @list.id}, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+    end
+
+    describe "should delete a list" do
+      it { expect(response.status).to eq(200) }
     end
   end
 end
