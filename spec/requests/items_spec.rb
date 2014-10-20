@@ -20,39 +20,37 @@ describe "Items API" do
     end
   end
 
-  context "post /api/v1/lists/id" do
+  context "post /api/v1/lists/id/items" do
     before do
       User.destroy_all
+      List.destroy_all
       @user = create(:user)
       @api = create(:api_key, user: @user)
-      @list = create(:list, permissions: "open", user: @user)
-      create_list(:item, 3, list_id: @list.id, completed: false)
-      create(:item, list_id: @list.id, completed: true)
-      get "/api/v1/lists/#{@list.id}", nil, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+      @list = create(:list, user: @user)
+      post "/api/v1/lists/#{@list.id}/items", {item: {description: 'test_item'}}, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
     end
 
     describe "should create a new item" do
       it { expect(response.status).to eq(200) }
-      it { json["list"]["items"].should be_a_kind_of(Array) }
-      it { json["list"]["items"].length.should eq 3 }
+      it { expect(Item.last.description).to eq('test_item') }
     end
   end
 
-  context "delete /api/v1/lists/id" do
+  context "delete /api/v1/items/id", focus: true do
     before do
       User.destroy_all
+      List.destroy_all
+      Item.destroy_all
       @user = create(:user)
       @api = create(:api_key, user: @user)
       @list = create(:list, permissions: "open", user: @user)
-      create_list(:item, 3, list_id: @list.id, completed: false)
-      create(:item, list_id: @list.id, completed: true)
-      get "/api/v1/lists/#{@list.id}", nil, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
+      @item = create(:item, list_id: @list.id, completed: 'false')
+      delete "/api/v1/items/#{@item.id}", nil, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
     end
 
     describe "should mark item complete" do
       it { expect(response.status).to eq(200) }
-      it { json["list"]["items"].should be_a_kind_of(Array) }
-      it { json["list"]["items"].length.should eq 3 }
+      it { expect(Item.last.completed).to eq(true) }
     end
   end
 
