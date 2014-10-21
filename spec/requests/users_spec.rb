@@ -5,14 +5,14 @@ describe "Users API" do
     before do
       User.destroy_all
       @api = create(:api_key)
-      30.times { create(:user) }
+      3.times { create(:user) }
       get "/api/v1/users/", nil, {'X-ACCESS-TOKEN' => "#{@api.access_token}"}
     end
 
     describe "should list all users" do
       it { expect(response.status).to eq(200) }
       it { json["users"].should be_a_kind_of(Array) }
-      it { json["users"].length.should eq 30 }
+      it { json["users"].length.should eq 3 }
     end
   end
 

@@ -173,7 +173,7 @@ describe Api::V1::ListsController do
     end
     
     it "fails with blank permission" do
-      params = { user_id: @user.id, list: {name: 'test_list', permissions: ''}}  #create is successful though if permission symbol is omitted
+      params = { user_id: @user.id, list: {name: 'test_list', permissions: ''}}  
       post :create, params
 
       expect(response.status).to eq(422) 
