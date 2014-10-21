@@ -24,6 +24,7 @@ describe "Items API" do
     before do
       User.destroy_all
       List.destroy_all
+      Item.destroy_all
       @user = create(:user)
       @api = create(:api_key, user: @user)
       @list = create(:list, user: @user)
