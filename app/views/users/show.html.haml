@@ -3,6 +3,9 @@
 %p
   %b Username:
   = @user.username
+%p
+  %b Token:
+  = @access_token
 
 %h1 Lists
 %table.table
@@ -17,6 +20,7 @@
 
 %br
 %br
+
 
 = link_to 'Edit', edit_user_path(@user), class: 'btn'
 \|

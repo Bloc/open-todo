@@ -1,8 +1,8 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :user do
-    sequence(:username) { |n| "myusername#{n}" }
-    password "mypassword"
+  factory :api_key do
+    user_id 1
+    access_token "secrettoken"
   end
 end

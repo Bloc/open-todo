@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :list do
-    name "Shopping List"
-    permissions "private"
+    sequence(:name) { |n| "Shopping List #{n}" }
+    permissions "open"
   end
 end
