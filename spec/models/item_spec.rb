@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Item do
   before do 
@@ -10,7 +10,7 @@ describe Item do
   
   describe "#mark_complete" do
     it "completes the item " do
-      expect(@item.mark_complete).to be_true
+      expect(@item.mark_complete).to eq(true)
     end
   end
 

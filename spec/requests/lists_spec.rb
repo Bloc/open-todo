@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "List API" do
   context "get /api/v1/lists/" do
@@ -13,8 +13,8 @@ describe "List API" do
 
     describe "should show all non-private lists" do
       it { expect(response.status).to eq(200) }
-      it { json["lists"].should be_a_kind_of(Array) }
-      it { json["lists"].length.should eq 6 }
+      it { expect(json["lists"]).to be_a_kind_of(Array) }
+      it { expect(json["lists"].length).to eq 6 }
     end
   end
 
@@ -31,8 +31,8 @@ describe "List API" do
 
     describe "should show all lists" do
       it { expect(response.status).to eq(200) }
-      it { json["lists"].should be_a_kind_of(Array) }
-      it { json["lists"].length.should eq 9 }
+      it { expect(json["lists"]).to be_a_kind_of(Array) }
+      it { expect(json["lists"].length).to eq 9 }
     end
   end
 
@@ -50,8 +50,8 @@ describe "List API" do
 
     describe "should show non-private lists" do
       it { expect(response.status).to eq(200) }
-      it { json["lists"].should be_a_kind_of(Array) }
-      it { json["lists"].length.should eq 6 }
+      it { expect(json["lists"]).to be_a_kind_of(Array) }
+      it { expect(json["lists"].length).to eq 6 }
     end
   end
 

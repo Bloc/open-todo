@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe User do 
   before do 
@@ -7,8 +7,8 @@ describe User do
 
   describe "#authenticate?" do
     it "tests for password parity" do
-      expect(@user.authenticate?('password')).to be_true
-      expect(@user.authenticate?('otherpass')).to be_false
+      expect(@user.authenticate?('password')).to eq(true)
+      expect(@user.authenticate?('otherpass')).to eq(false)
     end
   end
 
@@ -20,7 +20,7 @@ describe User do
     it "allows owners to do whatever they want" do
       expect(@list.user).to be @user
       [:view, :edit].each { |action|
-        @user.can?(action, @list).should be_true
+        expect(@user.can?(action, @list)).to eq(true)
       }
     end
 
@@ -31,18 +31,18 @@ describe User do
 
       expect([:view, :edit].all?{ |action| 
         user2.can?(action, @list) 
-      }).to be_false
+      }).to eq(false)
 
       @list.permissions = 'visible'
       
-      expect(user2.can?(:view, @list)).to be_true
-      expect(user2.can?(:edit, @list)).to be_false
+      expect(user2.can?(:view, @list)).to eq(true)
+      expect(user2.can?(:edit, @list)).to eq(false)
 
       @list.permissions = 'open'
 
       expect([:view, :edit].all?{ |action|
         user2.can?(action, @list) 
-      }).to be_true
+      }).to eq(true)
     end
   end
 

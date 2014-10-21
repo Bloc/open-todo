@@ -20,13 +20,13 @@ group :development, :test do
   gem 'pry'
   gem 'pry-rails'
   gem 'binding_of_caller'
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec', '~> 3.1.0'
 end
 
 group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
-  gem 'rspec-rails'  
-  gem 'rspec'
   gem 'shoulda-matchers'
 end
 

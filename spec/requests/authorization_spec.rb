@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Authorization for API" do
   context "connecting with an access_token" do

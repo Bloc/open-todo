@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe List do
   before do 
@@ -25,7 +25,7 @@ describe List do
     end
 
     it "returns false if nothing's there" do
-      expect(@list.remove("Not There")).to be_false
+      expect(@list.remove("Not There")).to eq(false)
     end
   end
 
