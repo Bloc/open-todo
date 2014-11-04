@@ -1,13 +1,26 @@
 Todo::Application.routes.draw do
-  resources :users do 
+  get "sign_up" => "users#new", :as => "sign_up"
+  resources :users do
     resources :lists, except: [:index]
   end
 
-  resources :lists, only: [] do
+  resources :lists do
     resources :items, only: [:create, :new]
   end
 
   resources :items, only: [:destroy]
+
+  namespace :api, :defaults => { :format => :json } do
+    resources :users do
+      resources :lists, except: [:index]
+    end
+
+    resources :lists, only: [:index] do
+      resources :items, only: [:create, :new]
+    end
+
+    resources :items, only: [:destroy]
+  end
 
   root to: 'users#new'
 end
