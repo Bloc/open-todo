@@ -13,13 +13,12 @@ describe Api::UsersController do
       expect{ post :create, params }
         .to change{ User.where(params[:user]).count }
         .by 1
-
-      JSON.parse(response.body).should == params[:user].delete('password')
+        JSON.parse(response.body) == params[:user]
+        puts response.body.inspect
     end
 
     it "returns an error when not given a password" do
       post :create, { :user => {username: 'testuser' } }
-      puts response.body.inspect
       response.should be_error
     end
 

@@ -4,7 +4,7 @@ class Api::UsersController < ApiController
   def index
     return permission_denied_error unless conditions_met
 
-    render json: User.all, each_serializer: ::InsecureUserSerializer
+    render json: User.all, each_serializer: InsecureUserSerializer
   end
 
 
@@ -13,7 +13,7 @@ class Api::UsersController < ApiController
     if @user.destroy
       render json: @user
     else
-      render json: @user.errors
+      render json: @user.errors, status: :errors
     end
   end
 
@@ -21,7 +21,7 @@ class Api::UsersController < ApiController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user
+      render json: UserSerializer.new(@user).to_json
     else
       render json: @user.errors, :status => 500
     end
