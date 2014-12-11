@@ -11,6 +11,7 @@ Todo::Application.routes.draw do
 
   namespace :api do
     resources :users, only: [:create, :index]
+    resources :lists, only: [:create, :index]
   end
 
   root to: 'users#new'
