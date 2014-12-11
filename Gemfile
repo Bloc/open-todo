@@ -57,3 +57,5 @@ end
 
 gem 'figaro', '1.0'
 gem 'active_model_serializers'
+
+gem 'rest-client'
