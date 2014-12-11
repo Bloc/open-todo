@@ -20,7 +20,7 @@ end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'rspec-rails'  
+  gem 'rspec-rails'
   gem 'rspec'
 end
 
@@ -49,3 +49,5 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem 'figaro', '1.0'

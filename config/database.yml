@@ -2,22 +2,25 @@ development:
   adapter: postgresql
   encoding: unicode
   database: todo_development
+  host: localhost
   pool: 5
-  username: 
-  password:
+  username: <%= ENV["DEV_DATABASE_USERNAME"] %>
+  password: <%= ENV["DEV_DATABASE_PASSWORD"] %>
 
 test:
   adapter: postgresql
   encoding: unicode
   database: todo_test
+  host: localhost
+  template: template0
   pool: 5
-  username: 
-  password:
+  username: <%= ENV["TEST_DATABASE_USERNAME"] %>
+  password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
 
 production:
   adapter: postgresql
   encoding: unicode
   database: todo_production
   pool: 5
-  username: 
+  username:
   password:
