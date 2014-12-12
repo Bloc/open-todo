@@ -43,10 +43,19 @@ describe Api::ListsController do
       end
 
       context "without correct user's password" do
-        xit "returns all visible and open lists"
+        it "returns all visible and open lists" do
+        params = {user_id: @user.id, password: 'wrongpassword'}
+        get :index, params
 
+        JSON.parse(response.body).should ==
+        { 'lists' =>
+          [
+            { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'open' },
+            { 'name' => 'visiblelist', 'user_id' => @user.id, 'permissions' => 'visible'},
+          ]
+        }
         end
       end
 
-
+    end
   end

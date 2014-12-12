@@ -1,6 +1,8 @@
 class List < ActiveRecord::Base
   belongs_to :user
-  has_many :items
+  has_many :items, dependent:  :destroy
+
+  scope :not_private, -> { where.not(permissions: "private") }
 
   def self.permission_options
     %w(private viewable open)
