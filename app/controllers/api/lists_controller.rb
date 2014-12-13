@@ -18,20 +18,38 @@ class Api::ListsController < ApiController
     @list.destroy
     if @list.destroy
       render json: @user
-    elseist
+    else
       render json: @list.errors, status: :errors
     end
   end
 
   def create
+    i=0
     @list = List.new(list_params)
+    @user = User.find(params[:user_id])
+
+    if @user.authenticate?(params[:password])
+      i=0
+    else
+      i=1
+    end
+
     @list.user_id = @user.id
 
-    if @user.save
-      render json: UserSerializer.new(@list).to_json
+
+    List.all.each do |b|
+      if b.name == @list.name
+        i=1
+      else
+      end
+    end
+
+    if (@list.save && i==0)
+      render json: @list
     else
       render json: @list.errors, :status => 500
     end
+
 
   end
 
