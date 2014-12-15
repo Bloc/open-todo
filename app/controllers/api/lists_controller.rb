@@ -1,7 +1,7 @@
 ActiveRecord::Base.include_root_in_json = true
 
 class Api::ListsController < ApiController
-
+  before_action :check_credentials, except: [:index]
 
   def index
     return permission_denied_error unless conditions_met
@@ -24,27 +24,13 @@ class Api::ListsController < ApiController
   end
 
   def create
-    i=0
-    @list = List.new(list_params)
-    @user = User.find(params[:user_id])
-
-    if @user.authenticate?(params[:password])
-      i=0
-    else
-      i=1
+    if !List.find_by_name(list_params[:name]).nil?
+      render text: "false", :status => 500 and return
     end
 
-    @list.user_id = @user.id
+    @list = @user.lists.build(list_params)
 
-
-    List.all.each do |b|
-      if b.name == @list.name
-        i=1
-      else
-      end
-    end
-
-    if (@list.save && i==0)
+    if @list.save
       render json: @list
     else
       render json: @list.errors, :status => 500
