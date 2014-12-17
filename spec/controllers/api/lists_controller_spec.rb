@@ -5,18 +5,56 @@ describe Api::ListsController do
   before do
     User.destroy_all
     List.destroy_all
+    @user = create(:user)
   end
 
-  describe "create" do
-    before do
-      @user = create(:user)
+
+  describe "destroy" do
+
+    context "with correct user's password" do
+        it "remove a list" do
+        params = { user_id: @user.id, password: @user.password,list:  { name: 'test_list', permissions: 'open' } }
+        post :create, params
+        expect(List.count).to eq 1
+        List.last.delete
+        expect(List.count).to eq 0
+      end
     end
+  end
+
+  describe "update" do
+      before do
+        @openList= @user.lists.create(name: "openlist", permissions: 'open' )
+      end
+
+      context "with correct user's password" do
+        it "change list permissions" do
+          params = {user_id: @user.id, password: @user.password, id: @openList.id, list: { permissions: 'private'}}
+          response = put :update, params
+          puts response.body.inspect
+          JSON.parse(response.body).should ==
+          { 'list' =>
+            { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'private' }
+          }
+        end
+
+        it "give error when setting an unsupported permission" do
+          params = {user_id: @user.id, password: 'wrongpassword', id: @openList.id, list: { permissions: 'private'}}
+          put :update, params
+          expect(response.status).to eq(401)
+        end
+      end
+  end
+
+
+  describe "create" do
+
 
     context "with correct user's password" do
       it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
         params = { user_id: @user.id, password:@user.password, list:  { name: 'test_list', permissions: 'open' } }
         response = post :create, params
-        puts response.body.inspect
+
         expect(List.last.name).to eq('test_list')
         expect(List.count).to eq(1)
         JSON.parse(response.body).should ==
@@ -43,7 +81,6 @@ describe Api::ListsController do
   describe "index" do
 
     before do
-      @user = create(:user)
       openList= @user.lists.create(name: "openlist", permissions: 'open' )
       visibleList= @user.lists.create(name: "visiblelist", permissions: 'visible' )
       privateList= @user.lists.create(name: "privatelist", permissions: 'private' )

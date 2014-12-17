@@ -17,7 +17,16 @@ class Api::ListsController < ApiController
   def destroy
     @list.destroy
     if @list.destroy
-      render json: @user
+      render json: @list
+    else
+      render json: @list.errors, status: :errors
+    end
+  end
+
+  def update
+    @list=List.find(params[:id])
+    if @list.update_attributes(list_params)
+      render json: @list
     else
       render json: @list.errors, status: :errors
     end
