@@ -25,20 +25,41 @@ describe Api::ListsController do
   describe "update" do
       before do
         @openList= @user.lists.create(name: "openlist", permissions: 'open' )
+        @viewableList= @user.lists.create(name: "viewablelist", permissions: 'viewable' )
+        @privateList= @user.lists.create(name: "privatelist", permissions: 'private' )
       end
 
       context "with correct user's password" do
         it "change list permissions" do
-          params = {user_id: @user.id, password: @user.password, id: @openList.id, list: { permissions: 'private'}}
-          response = put :update, params
-          puts response.body.inspect
+          params = {user_id: @user.id, password: @user.password, id: @openList.id, list: { name: @openList.name, permissions: 'private'}}
+          put :update, params
           JSON.parse(response.body).should ==
           { 'list' =>
-            { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'private' }
+
+              { 'name' => 'openlist', 'user_id' => @user.id, 'permissions' => 'private' }
+
           }
         end
 
-        it "give error when setting an unsupported permission" do
+        it "can not edit a list if it viewable" do
+          params = {user_id: @user.id, password: @user.password, id: @viewableList.id, list: { name: 'Shouldnotwork', permissions: @viewableList.permissions}}
+         put :update, params
+
+          expect(response.status).to eq(500)
+        end
+
+        it "gives an error when attempting to set an unsupported permission" do
+          params = {user_id: @user.id, password: @user.password, id: @privateList.id, list: { permissions: 'wrongpermission'}}
+          response = put :update, params
+          puts response.body.inspect
+          expect(response.status).to eq(500)
+        end
+
+
+      end
+
+      context "with incorrect user's password" do
+        it "give error when editing a List" do
           params = {user_id: @user.id, password: 'wrongpassword', id: @openList.id, list: { permissions: 'private'}}
           put :update, params
           expect(response.status).to eq(401)
@@ -53,7 +74,7 @@ describe Api::ListsController do
     context "with correct user's password" do
       it "takes a list name, creates it if it doesn't exist, and returns false if it does" do
         params = { user_id: @user.id, password:@user.password, list:  { name: 'test_list', permissions: 'open' } }
-        response = post :create, params
+        post :create, params
 
         expect(List.last.name).to eq('test_list')
         expect(List.count).to eq(1)
@@ -118,4 +139,7 @@ describe Api::ListsController do
       end
 
     end
+
+
+
   end

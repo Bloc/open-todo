@@ -5,10 +5,16 @@ class ApiController < ApplicationController
 
     @user = User.find(params[:user_id])
 
+
     unless @user.authenticate?(params[:password])
       render text: "bad username or password", :status => 401 and return
     end
 
+
+
+
+
   end
+
 
 end

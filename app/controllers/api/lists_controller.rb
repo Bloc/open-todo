@@ -11,6 +11,7 @@ class Api::ListsController < ApiController
     else
       render json: List.all.not_private, each_serializer: ListSerializer
     end
+
   end
 
 
@@ -24,7 +25,17 @@ class Api::ListsController < ApiController
   end
 
   def update
-    @list=List.find(params[:id])
+    @user = User.find(params[:user_id])
+    @list=@user.lists.build(list_params)
+    perm = @list.permissions
+    puts perm
+    unless (perm == "private") || (perm == "viewable")  || (perm == "open")
+      render text: "Permissions not supported.  Permissions allowed are open, viewable, or private", :status => 500 and return
+    end
+
+    unless @user.can?(:edit, @list)
+      render text: "no permission to edit", :status => 500 and return
+    end
     if @list.update_attributes(list_params)
       render json: @list
     else
@@ -38,7 +49,10 @@ class Api::ListsController < ApiController
     end
 
     @list = @user.lists.build(list_params)
-
+    perm = @list.permissions
+    unless (perm == "private") || (perm == "viewable")  || (perm == "open")
+      render text: "Permissions not supported.  Permissions allowed are open, viewable, or private", :status => 500 and return
+    end
     if @list.save
       render json: @list
     else
@@ -57,4 +71,6 @@ class Api::ListsController < ApiController
   def list_params
     params.require(:list).permit(:name, :user_id, :permissions)
   end
+
+
 end
