@@ -65,11 +65,6 @@ describe Api::ItemsController do
       end
     end
 
-    context "without correct user's password" do
-      it "returns all items if list is visible or open" do
-
-      end
-
     end
 
 
