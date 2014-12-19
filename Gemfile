@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.3'
 
 # Use postgresql as the database for Active Record
-gem 'pg'
+
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap'
 gem 'bootstrap-sass'
@@ -13,14 +13,19 @@ gem 'haml-rails'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 
+group :production do
+  gem 'pg'
+end
+
 group :development, :test do
+  gem 'sqlite3'
   gem 'pry'
   gem 'binding_of_caller'
 end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'rspec-rails'  
+  gem 'rspec-rails'
   gem 'rspec'
 end
 
@@ -49,3 +54,8 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem 'figaro', '1.0'
+gem 'active_model_serializers'
+
+gem 'rest-client'

@@ -1,23 +1,26 @@
 development:
-  adapter: postgresql
+  adapter: sqlite3
   encoding: unicode
-  database: todo_development
+  database: db/todo_development.sqlite3
+  host: localhost
   pool: 5
-  username: 
-  password:
+  username: <%= ENV["DEV_DATABASE_USERNAME"] %>
+  password: <%= ENV["DEV_DATABASE_PASSWORD"] %>
 
 test:
-  adapter: postgresql
+  adapter: sqlite3
   encoding: unicode
-  database: todo_test
+  database: db/todo_test.sqlite3
+  host: localhost
+  template: template0
   pool: 5
-  username: 
-  password:
+  username: <%= ENV["TEST_DATABASE_USERNAME"] %>
+  password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
 
 production:
-  adapter: postgresql
+  adapter: sqlite3
   encoding: unicode
-  database: todo_production
+  database: db/todo_production.sqlite3
   pool: 5
-  username: 
+  username:
   password:
