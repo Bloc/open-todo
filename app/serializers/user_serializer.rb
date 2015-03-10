@@ -9,11 +9,6 @@
 #  updated_at :datetime
 #
 
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
-FactoryGirl.define do
-  factory :user do
-    username "myusername"
-    password "mypassword"
-  end
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :username, :password, :created_at, :updated_at
 end
