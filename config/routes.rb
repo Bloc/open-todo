@@ -4,8 +4,8 @@ Todo::Application.routes.draw do
     post 'login', to: 'sessions#create', as: 'login'
     delete 'logout', to: 'sessions#destroy', as: 'logout'
 
-    resources :users, only: :index do
-      resources :lists, except: :index
+    resources :users do
+      resources :lists
     end
 
     resources :lists, only: [] do
