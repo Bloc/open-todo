@@ -1,6 +1,10 @@
 Todo::Application.routes.draw do
-  namespace :api, defaults: { format: :json }, constraints: { subdomain: 'api' }, path: '/' do
-    resources :users, only: [:index, :create] do
+  namespace :api do
+    post 'signup', to: 'users#create', as: 'signup'
+    post 'login', to: 'sessions#create', as: 'login'
+    delete 'logout', to: 'sessions#destroy', as: 'logout'
+
+    resources :users, only: :index do
       resources :lists, except: :index
     end
 

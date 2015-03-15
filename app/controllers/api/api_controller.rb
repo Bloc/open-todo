@@ -6,8 +6,16 @@ module Api
 
     private
 
-    def permission_denied_error
-      error(403, 'Permission Denied!')
+    def current_user
+      @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    end
+
+    def logged_in?
+      error(403, "Must be logged in. Go to /login or /signup.") if current_user.nil?
+    end
+
+    def protected?
+      error(403, 'Permission Denied!') unless true
     end
 
     def error(status, message = 'Something went wrong')
