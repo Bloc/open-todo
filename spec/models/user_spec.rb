@@ -12,13 +12,13 @@
 require 'spec_helper'
 
 describe User do
-  describe "authenticate?" do
+  describe "pass?" do
 
     let(:user) { FactoryGirl.build(:user, password: 'password') }
 
     it "tests for password parity" do
-      expect(user.authenticate?('password')).to be_truthy
-      expect(user.authenticate?('otherpass')).to be_falsey
+      expect(user.pass?('password')).to be_truthy
+      expect(user.pass?('otherpass')).to be_falsey
     end
   end
 

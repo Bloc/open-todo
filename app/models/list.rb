@@ -12,7 +12,7 @@
 
 class List < ActiveRecord::Base
   belongs_to :user
-  has_many :items
+  has_many :items, dependent: :destroy
 
   def self.permission_options
     %w(private viewable open)

@@ -16,10 +16,6 @@ class User < ActiveRecord::Base
   has_secure_password
   validates :username, presence: true, uniqueness: true
 
-  def authenticate?(pass)
-    password == pass
-  end
-
   def can?(action, list)
     case list.permissions
     when 'private'  then owns?(list)

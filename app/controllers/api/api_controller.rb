@@ -6,15 +6,14 @@ module Api
 
     private
 
-    def current_user
-      @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    def auth
+      authenticate_or_request_with_http_basic do |u, p|
+        user = User.find_by(username: u)
+        user.try(:authenticate, p)
+      end
     end
 
-    def logged_in?
-      error(403, "Must be logged in. Go to /login or /signup.") if current_user.nil?
-    end
-
-    def protected?
+    def permission_denied
       error(403, 'Permission Denied!') unless true
     end
 
