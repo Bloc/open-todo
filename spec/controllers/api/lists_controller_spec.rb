@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::ListsController do 
+describe ListsController do 
   describe "create" do
     context "with correct user's password" do
       xit "takes a list name, creates it if it doesn't exist, and returns false if it does"
