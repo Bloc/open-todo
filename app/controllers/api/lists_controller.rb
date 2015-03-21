@@ -1,20 +1,21 @@
 module Api
   class Api::ListsController < Api::ApiController
+    before_action :auth
     before_action :set_user
     before_action :set_list, only: [:show, :update, :destroy]
 
     def index
-      @lists = @user.lists
+      @lists = List.all.select {|l| l if @user.can?(:view, l)}
       render json: @lists, each_serializer: ListSerializer
     end
 
     def show
-      render json: @list
+      render json: @list if @user.can?(:view, @list)
     end
 
     def create
       @list = List.new(list_params[:name, :permissions])
-      @list.user_id = @user.id
+      @list.user = @user
 
       if @list.save
         render json: @list, status: :created, location: @list
@@ -39,7 +40,7 @@ module Api
     private
 
     def set_user
-      @user = User.find(params[:user_id])
+      @user = User.find_by(username: params[:username])
     end
 
     def set_list
@@ -47,7 +48,7 @@ module Api
     end
 
     def list_params
-      params.require(:list).permit(:name, :permissions, :user_id)
+      params.require(:list).permit(:name, :permissions)
     end
   end
 end

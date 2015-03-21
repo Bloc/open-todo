@@ -1,6 +1,6 @@
 Todo::Application.routes.draw do
   namespace :api do
-    post 'signup', to: 'users#create', as: 'signup'
+    root 'lists#index'
 
     resources :users, except: [:new, :edit] do
       resources :lists, except: [:new, :edit]
@@ -12,14 +12,4 @@ Todo::Application.routes.draw do
 
     resources :items, only: :destroy
   end
-
-  resources :users do
-    resources :lists, except: :index
-  end
-
-  resources :lists, only: [] do
-    resources :items, only: [:create, :new]
-  end
-
-  resources :items, only: :destroy
 end
