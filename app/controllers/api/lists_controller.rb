@@ -18,7 +18,7 @@ module Api
       @list.user = @user
 
       if @list.save
-        render json: @list, status: :created, location: @list
+        render json: @list, status: :created
       else
         render json: @list.errors, status: :unprocessable_entity
       end

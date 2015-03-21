@@ -14,7 +14,7 @@ module Api
 
     def create
       if @list.add(item_params[:description])
-        render json: @item, status: :created, location: @item
+        render json: @item, status: :created
       else
         render json: @item.errors, status: :unprocessable_entity
       end
