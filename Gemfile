@@ -2,25 +2,28 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.3'
-
-# Use postgresql as the database for Active Record
-gem 'pg'
+gem 'active_model_serializers'
 gem 'sass-rails', '~> 4.0.0'
-gem 'bootstrap'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.2.0'
 gem 'haml'
 gem 'haml-rails'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 
+group :production do
+  # Use postgresql as the database for Active Record
+  gem 'pg'
+end
+
 group :development, :test do
+  gem 'sqlite3'
   gem 'pry'
   gem 'binding_of_caller'
 end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'rspec-rails'  
+  gem 'rspec-rails'
   gem 'rspec'
 end
 
