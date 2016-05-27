@@ -1,5 +1,9 @@
 Todo::Application.routes.draw do
-  resources :users do 
+
+  namespace :api, defaults: {format: :json} do
+    resources :users
+  end 
+  resources :users do
     resources :lists, except: [:index]
   end
 
