@@ -2,8 +2,8 @@ class Api::ListsController< ApiController
  before_action :authenticated?
 
   def create
-    user = User.find(:user_id)
-    list= User.list.new(:lists_params)
+    user = User.find(params[:user_id])
+    list = user.lists.new(lists_params)
 
     #needs completion
     if list.save
@@ -15,6 +15,7 @@ class Api::ListsController< ApiController
 
 private
 
-def lists_params
-  params.require(:lists).permit(:name,:user_id,:permissions)
+  def lists_params
+    params.require(:list).permit(:name,:permissions)
+  end
 end

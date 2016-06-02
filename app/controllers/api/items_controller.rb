@@ -2,10 +2,9 @@ class Api::ItemsController< ApiController
 before_action :authenticated?
 
   def create
-    list = Item.find(:item_id)
-    item = list.item.new(:items_params)
+    list = List.find(params[:list_id])
+    item = list.items.new(items_params)
 
-    #needs completion
     if item.save
       render json: item
     else
@@ -13,4 +12,9 @@ before_action :authenticated?
     end
   end
 
+  private
+
+  def items_params
+    params.require(:item).permit(:description)
+  end
 end
